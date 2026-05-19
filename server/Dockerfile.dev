@@ -1,0 +1,20 @@
+# Dockerfile - Desarrollo Backend (Go)
+FROM golang:1.22-alpine
+
+WORKDIR /app
+
+# Instalar dependencias necesarias para hot-reload
+RUN apk add --no-cache git
+
+# Instalar Air para desarrollo con hot-reload
+RUN go install github.com/air-verse/air@latest
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+# El servidor de Go corre en el 8080
+EXPOSE 8080
+
+CMD ["air", "-c", ".air.toml"]
