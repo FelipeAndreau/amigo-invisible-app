@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile.dev
       network: host
     container_name: amigo-invisible-api
+    dns:
+      - 8.8.8.8
     ports:
       - "8080:8080"
     volumes:
@@ -23,7 +25,10 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.dev
+      network: host
     container_name: amigo-invisible-mobile
+    dns:
+      - 8.8.8.8
     ports:
       - "8081:8081"
     volumes:

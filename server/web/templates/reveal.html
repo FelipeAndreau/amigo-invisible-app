@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelación - Amigo Invisible</title>
+    
+    <!-- Metadatos para Previsualización -->
+    <meta property="og:title" content="🎁 Tu Amigo Invisible está listo">
+    <meta property="og:description" content="Haz clic para descubrir a quién te toca regalar.">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #FFF1F2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #881337;
+        }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+        }
+        h1 { font-family: 'Fredoka', sans-serif; color: #E11D48; margin-bottom: 0.5rem; }
+        p { font-size: 1.1rem; color: #666; margin-bottom: 2rem; }
+        .reveal-btn {
+            background-color: #E11D48;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .reveal-btn:active { transform: scale(0.95); }
+        .result-box {
+            display: none;
+            background-color: #FFF1F2;
+            border: 2px dashed #E11D48;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+        }
+        .assigned-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5rem;
+            color: #E11D48;
+            margin: 0;
+        }
+        .footer { font-size: 0.8rem; color: #999; margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div id="initial-view">
+            <h1>¡Hola {{ .Name }}!</h1>
+            <p>Tu amigo invisible está listo...</p>
+            <button class="reveal-btn" onclick="reveal()">REVELAR</button>
+        </div>
+
+        <div id="reveal-view" class="result-box">
+            <p style="margin-bottom: 0.5rem">Te toca regalarle a:</p>
+            <h2 class="assigned-name">{{ .AssignedName }}</h2>
+        </div>
+
+        <div class="footer">Recuerda guardar este nombre en secreto 🤫</div>
+    </div>
+
+    <script>
+        function reveal() {
+            document.getElementById('initial-view').style.display = 'none';
+            document.getElementById('reveal-view').style.display = 'block';
+            
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#E11D48', '#FB7185', '#2563EB']
+            });
+        }
+    </script>
+</body>
+</html>

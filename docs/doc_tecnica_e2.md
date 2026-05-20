@@ -16,12 +16,16 @@ Se ha implementado un sistema de autenticación basado en **JWT (JSON Web Tokens
 | `POST` | `/api/v1/auth/register` | Registro de organizador | `{email, password}` |
 | `POST` | `/api/v1/auth/login` | Login de organizador | `{email, password}` |
 | `GET` | `/api/v1/events` | Listado (Protegido) | - |
+| `POST` | `/api/v1/events/:id/participants` | Agregar participante (Draft) | `{name}` |
+| `DELETE` | `/api/v1/events/:id/participants/:pid` | Eliminar participante | - |
+| `POST` | `/api/v1/events/:id/shuffle`| Ejecutar sorteo | - |
+| `GET` | `/r/:token` | Página Web de Revelación | - |
 
 ## 3. Estructura de Base de Datos (PostgreSQL)
-Se ha definido el esquema inicial en `server/internal/platform/db/schema.sql`:
-- **Users**: Registro de organizadores.
-- **Events**: Cabecera de los sorteos.
-- **Participants**: Detalle y asignaciones de amigos invisibles.
+Se ha definido el esquema final en `server/internal/platform/db/schema.sql`:
+- **Users**: Almacena credenciales (hashing Bcrypt) de organizadores.
+- **Events**: Cabecera con estados `draft` y `shuffled`.
+- **Participants**: Incluye `revealed_at` para control de un solo uso.
 
 ## 4. Decisiones de Refactoring
 1. **Lógica de Sorteo al Servidor:** Originalmente en `client/src/features/event/logic/shuffle.ts`, el algoritmo se ha migrado al backend en Go. Esto evita que un usuario curioso pueda ver los resultados inspeccionando el estado de la app antes de tiempo.

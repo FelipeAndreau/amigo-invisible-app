@@ -1,14 +1,33 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
-import { UserPlus } from 'lucide-react-native';
-import { Participant } from '../logic/shuffle';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { UserPlus, Share2, Trash2 } from 'lucide-react-native';
 import { Theme } from '../../../shared/theme';
+
+interface Participant {
+  id: string;
+  name: string;
+  access_token?: string;
+}
 
 interface Props {
   participants: Participant[];
+  ListHeaderComponent?: React.ReactElement;
+  ListFooterComponent?: React.ReactElement;
+  onPress?: (p: Participant) => void;
+  onDelete?: (p: Participant) => void;
+  showShareIcon?: boolean;
+  showDeleteIcon?: boolean;
 }
 
-export const ParticipantList = ({ participants }: Props) => {
+export const ParticipantList = ({ 
+  participants, 
+  ListHeaderComponent, 
+  ListFooterComponent, 
+  onPress,
+  onDelete,
+  showShareIcon,
+  showDeleteIcon 
+}: Props) => {
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
       <UserPlus color={Theme.colors.secondary} size={48} strokeWidth={1.5} />
@@ -21,12 +40,37 @@ export const ParticipantList = ({ participants }: Props) => {
     <FlatList
       data={participants}
       keyExtractor={(item) => item.id}
-      contentContainerStyle={participants.length === 0 ? { flex: 1 } : { paddingBottom: 20 }}
+      contentContainerStyle={[
+        styles.listContent,
+        participants.length === 0 && { flexGrow: 1 }
+      ]}
       ListEmptyComponent={renderEmpty}
+      ListHeaderComponent={ListHeaderComponent}
+      ListFooterComponent={ListFooterComponent}
       renderItem={({ item }) => (
-        <View style={styles.item}>
-          <View style={styles.dot} />
-          <Text style={styles.itemText}>{item.name}</Text>
+        <View style={styles.itemContainer}>
+          <TouchableOpacity 
+            style={styles.item} 
+            onPress={() => onPress && onPress(item)}
+            disabled={!onPress}
+            activeOpacity={0.7}
+          >
+            <View style={styles.dot} />
+            <Text style={styles.itemText}>{item.name}</Text>
+            
+            {showShareIcon && item.access_token && (
+              <Share2 size={18} color={Theme.colors.cta} />
+            )}
+
+            {showDeleteIcon && (
+              <TouchableOpacity 
+                onPress={() => onDelete && onDelete(item)}
+                style={styles.deleteAction}
+              >
+                <Trash2 size={18} color={Theme.colors.error} />
+              </TouchableOpacity>
+            )}
+          </TouchableOpacity>
         </View>
       )}
     />
@@ -34,10 +78,16 @@ export const ParticipantList = ({ participants }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  listContent: {
+    paddingBottom: 40,
+  },
+  itemContainer: {
+    paddingHorizontal: Theme.spacing.lg,
+  },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Theme.white,
+    backgroundColor: Theme.colors.white,
     padding: 16,
     borderRadius: 14,
     marginBottom: 10,
@@ -55,12 +105,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito-Bold',
     fontSize: 16,
     color: Theme.colors.text,
+    flex: 1,
+  },
+  deleteAction: {
+    padding: 4,
+    marginLeft: 10,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     opacity: 0.6,
+    paddingVertical: 40,
   },
   emptyText: {
     fontFamily: 'Fredoka-Bold',

@@ -14,7 +14,8 @@
 - **RF-05: Registro y Autenticación del Organizador.** El sistema debe permitir al usuario crear una cuenta con email/contraseña y obtener un token JWT para sesiones seguras.
 - **RF-06: Dashboard de Sorteos.** El usuario autenticado debe poder ver un listado de todos los sorteos creados por él, con su estado actual (Borrador, Sorteado, Finalizado).
 - **RF-07: Generación de Magic Links.** Tras realizar el sorteo, el sistema debe generar una URL única y segura para cada participante.
-- **RF-08: Revelación Segura de Participante.** El sistema debe permitir visualizar el nombre asignado solo si se accede mediante el Magic Link válido y no expirado.
+- **RF-09: Gestión Dinámica de Participantes.** El sistema permite agregar o eliminar participantes de un evento existente siempre que este se encuentre en estado "Borrador".
+- **RF-10: Persistencia de Revelación.** El sistema registra el momento de la primera revelación y bloquea accesos posteriores para garantizar la integridad del sorteo.
 
 ## 3. User Stories (E2)
 

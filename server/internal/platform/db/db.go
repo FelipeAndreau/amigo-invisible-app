@@ -11,12 +11,15 @@ import (
 var DB *sql.DB
 
 func InitDB() {
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	name := os.Getenv("DB_NAME")
+
+	log.Printf("Connecting to DB: host=%s port=%s user=%s dbname=%s", host, port, user, name)
+
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
+		host, port, user, os.Getenv("DB_PASSWORD"), name,
 	)
 
 	var err error

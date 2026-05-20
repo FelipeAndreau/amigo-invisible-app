@@ -3,8 +3,8 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Instalar dependencias globales de expo
-RUN npm install -g expo-cli
+# Instalar dependencias globales de expo y ngrok para túneles
+RUN npm install -g expo-cli @expo/ngrok
 
 COPY package*.json ./
 # Usamos legacy-peer-deps para evitar conflictos en el entorno de 2026

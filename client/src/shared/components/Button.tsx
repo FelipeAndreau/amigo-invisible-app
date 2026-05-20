@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, ActivityIndicator, View, ViewStyle, TextStyle } from 'react-native';
 import { Theme } from '../theme';
 
 interface Props {
@@ -36,14 +36,14 @@ export const Button = ({
     <TouchableOpacity 
       style={[styles.button, { backgroundColor: getBgColor() }, style]}
       onPress={onPress}
-      disabled={disabled || loading}
+      disabled={!!(disabled || loading)}
       activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator color="white" />
+        <ActivityIndicator color="#FFFFFF" />
       ) : (
         <>
-          {icon && <ActivityIndicator style={{ marginRight: 8 }}>{icon}</ActivityIndicator>}
+          {!!icon && <View style={{ marginRight: 8 }}>{icon}</View>}
           <Text style={styles.text}>{title}</Text>
         </>
       )}
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Fredoka-Bold',
-    color: Theme.white,
+    color: Theme.colors.white,
     fontSize: 18,
   },
 });
