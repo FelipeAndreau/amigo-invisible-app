@@ -1,11 +1,15 @@
 package main
 
 import (
+	"amigo-invisible-server/internal/auth"
+	"amigo-invisible-server/internal/platform/db"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func main() {
+	db.InitDB()
+
 	r := gin.Default()
 
 	r.GET("/health", func(c *gin.Context) {
@@ -15,12 +19,27 @@ func main() {
 		})
 	})
 
-	// Placeholder para futuras rutas de la E2
 	api := r.Group("/api/v1")
 	{
-		api.GET("/events", func(c *gin.Context) {
-			c.JSON(http.StatusOK, []string{})
-		})
+		// Rutas públicas
+		authGroup := api.Group("/auth")
+		{
+			authGroup.POST("/register", auth.RegisterHandler)
+			authGroup.POST("/login", auth.LoginHandler)
+		}
+
+		// Rutas protegidas
+		protected := api.Group("/")
+		protected.Use(auth.AuthMiddleware())
+		{
+			protected.GET("/events", func(c *gin.Context) {
+				userID, _ := c.Get("userID")
+				c.JSON(http.StatusOK, gin.H{
+					"events": []string{},
+					"owner":  userID,
+				})
+			})
+		}
 	}
 
 	r.Run(":8080")

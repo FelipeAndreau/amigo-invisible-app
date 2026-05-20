@@ -11,6 +11,11 @@ services:
       - ./server:/app
     environment:
       - APP_ENV=dev
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USER=felipe
+      - DB_PASSWORD=secret
+      - DB_NAME=amigo_invisible
     networks:
       - amigo-invisible-net
 
@@ -29,6 +34,23 @@ services:
     networks:
       - amigo-invisible-net
 
+  database:
+    image: postgres:16-alpine
+    container_name: amigo-invisible-db
+    environment:
+      - POSTGRES_USER=felipe
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=amigo_invisible
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - amigo-invisible-net
+
 networks:
   amigo-invisible-net:
     driver: bridge
+
+volumes:
+  postgres_data:
