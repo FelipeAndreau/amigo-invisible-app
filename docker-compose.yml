@@ -3,6 +3,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile.dev
+      network: host
     container_name: amigo-invisible-api
     ports:
       - "8080:8080"
