@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Participant } from '../logic/shuffle';
+import { Participant, performShuffle } from '../logic/shuffle';
 
 export interface EventState {
   name: string;
@@ -17,27 +17,42 @@ export const useEvent = () => {
   });
 
   const addParticipant = (name: string) => {
-    if (
-      state.participants.some(
-        participant => participant.name.toLowerCase() === name.toLowerCase(),
-      )
-    ) {
-      throw new Error('El participante ya existe');
-    }
+    setState(prev => {
+      if (
+        prev.participants.some(
+          participant => participant.name.toLowerCase() === name.toLowerCase(),
+        )
+      ) {
+        throw new Error('El participante ya existe');
+      }
 
-    const newParticipant: Participant = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: name.trim(),
-    };
+      const newParticipant: Participant = {
+        id: Math.random().toString(36).substr(2, 9),
+        name: name.trim(),
+      };
 
-    setState({
-      ...state,
-      participants: [...state.participants, newParticipant],
+      return {
+        ...prev,
+        participants: [...prev.participants, newParticipant],
+      };
+    });
+  };
+
+  const startShuffle = () => {
+    setState(prev => {
+      const assignments = performShuffle(prev.participants);
+
+      return {
+        ...prev,
+        assignments,
+        isSorted: true,
+      };
     });
   };
 
   return {
     ...state,
     addParticipant,
+    startShuffle,
   };
 };
