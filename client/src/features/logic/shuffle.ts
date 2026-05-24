@@ -11,8 +11,11 @@ export const performShuffle = (participants: Participant[]): Record<string, stri
   const names = participants.map(participant => participant.name);
   let shuffledNames = [...names];
   let isValid = false;
+  let attempts = 0;
+  const MAX_ATTEMPTS = 500;
 
-  while (!isValid) {
+  while (!isValid && attempts < MAX_ATTEMPTS) {
+    attempts++;
     shuffledNames = [...names];
 
     for (let i = shuffledNames.length - 1; i > 0; i--) {
@@ -28,6 +31,10 @@ export const performShuffle = (participants: Participant[]): Record<string, stri
         break;
       }
     }
+  }
+
+  if (!isValid) {
+    throw new Error('No se pudo generar un sorteo válido tras varios intentos. Intenta cambiar los participantes.');
   }
 
   const assignments: Record<string, string> = {};
