@@ -18,6 +18,10 @@ export const useEvent = () => {
 
   const [loading] = useState(false);
 
+  const createEvent = useCallback((name: string) => {
+    setState({ name, participants: [], assignments: {}, isSorted: false });
+  }, []);
+
   const addParticipant = useCallback((name: string) => {
     setState(prev => {
       if (prev.participants.some(p => p.name.toLowerCase() === name.toLowerCase())) {
@@ -57,6 +61,7 @@ export const useEvent = () => {
   return {
     ...state,
     loading,
+    createEvent,
     addParticipant,
     startShuffle,
     resetEvent,
