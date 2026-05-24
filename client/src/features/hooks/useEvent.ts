@@ -50,9 +50,19 @@ export const useEvent = () => {
     });
   };
 
+  const resetEvent = () => {
+    setState({
+      name: '',
+      participants: [],
+      assignments: {},
+      isSorted: false,
+    });
+  };
+
   return {
     ...state,
     addParticipant,
     startShuffle,
+    resetEvent,
   };
 };
