@@ -19,17 +19,17 @@ import { RevealCard } from './src/features/event/components/RevealCard';
 
 // Habilitar LayoutAnimation en Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-UIManager.setLayoutAnimationEnabledExperimental(true);
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 export default function App() {
-const [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     'Fredoka-Bold': Fredoka_700Bold,
     'Nunito-Regular': Nunito_400Regular,
     'Nunito-Bold': Nunito_700Bold,
-});
+  });
 
-const { 
+  const { 
     name, 
     participants, 
     isSorted, 
@@ -39,146 +39,146 @@ const {
     addParticipant, 
     startShuffle, 
     resetEvent 
-} = useEvent();
+  } = useEvent();
 
-const [revealIndex, setRevealIndex] = useState(0);
-const [isRevealing, setIsRevealing] = useState(false);
-const [eventNameInput, setEventNameInput] = useState('');
+  const [revealIndex, setRevealIndex] = useState(0);
+  const [isRevealing, setIsRevealing] = useState(false);
+  const [eventNameInput, setEventNameInput] = useState('');
 
   // Reset local state when event ends or resets
-useEffect(() => {
+  useEffect(() => {
     if (!name) {
-    setRevealIndex(0);
-    setIsRevealing(false);
-    setEventNameInput('');
+      setRevealIndex(0);
+      setIsRevealing(false);
+      setEventNameInput('');
     }
-}, [name]);
+  }, [name]);
 
-if (!fontsLoaded || loading) {
+  if (!fontsLoaded || loading) {
     return (
-    <View style={[styles.container, styles.center]}>
+      <View style={[styles.container, styles.center]}>
         <ActivityIndicator size="large" color={Theme.colors.primary} />
-    </View>
+      </View>
     );
-}
+  }
 
   // Vista 1: Setup del Evento
-if (!name) {
+  if (!name) {
     return (
-    <View style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.hero}>
-        <EventHeader 
+          <EventHeader 
             title="🎉 Amigo Invisible" 
             subtitle="Organiza tu sorteo de forma fácil, segura y secreta." 
-        />
+          />
         </View>
         
         <Input 
-        label="Nombre del evento"
-        placeholder="Ej: Navidad en Familia 🎄"
-        value={eventNameInput}
-        onChangeText={setEventNameInput}
+          label="Nombre del evento"
+          placeholder="Ej: Navidad en Familia 🎄"
+          value={eventNameInput}
+          onChangeText={setEventNameInput}
         />
 
         <Button 
-        title="Comenzar"
-        onPress={() => {
+          title="Comenzar"
+          onPress={() => {
             if (!eventNameInput.trim()) return Alert.alert('Error', 'Ingresa un nombre para el evento');
             LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
             createEvent(eventNameInput);
-        }}
+          }}
         />
         <StatusBar style="auto" />
-    </View>
+      </View>
     );
-}
+  }
 
   // Vista 3: Modo Revelación (Sorteo realizado)
-if (isSorted) {
+  if (isSorted) {
     const currentGiver = participants[revealIndex];
     const currentReceiver = participants.find(p => p.id === assignments[currentGiver.id]);
 
     return (
-    <View style={styles.container}>
+      <View style={styles.container}>
         <EventHeader title={name} />
         <RevealCard 
-        giverName={currentGiver.name}
-        receiverName={currentReceiver?.name || '???'}
-        isRevealing={isRevealing}
-        onRevealIn={() => setIsRevealing(true)}
-        onRevealOut={() => setIsRevealing(false)}
-        onNext={() => setRevealIndex(revealIndex + 1)}
-        onReset={() => {
+          giverName={currentGiver.name}
+          receiverName={currentReceiver?.name || '???'}
+          isRevealing={isRevealing}
+          onRevealIn={() => setIsRevealing(true)}
+          onRevealOut={() => setIsRevealing(false)}
+          onNext={() => setRevealIndex(revealIndex + 1)}
+          onReset={() => {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             resetEvent();
-        }}
-        isLast={revealIndex === participants.length - 1}
+          }}
+          isLast={revealIndex === participants.length - 1}
         />
-    </View>
+      </View>
     );
-}
+  }
 
   // Vista 2: Gestión de Participantes
-return (
+  return (
     <View style={styles.container}>
-    <EventHeader title={name} isCentered={false} />
-    
-    <ParticipantInput onAdd={(name) => {
+      <EventHeader title={name} isCentered={false} />
+      
+      <ParticipantInput onAdd={(name) => {
         try {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        addParticipant(name);
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          addParticipant(name);
         } catch (e: any) {
-        Alert.alert('¡Ups!', e.message);
+          Alert.alert('¡Ups!', e.message);
         }
-    }} />
+      }} />
 
-    <ParticipantList participants={participants} />
+      <ParticipantList participants={participants} />
 
       {/* Botón de Sorteo footer */}
-    <View style={styles.absoluteFooter}>
+      <View style={styles.absoluteFooter}>
         <Button 
-        title="REALIZAR SORTEO"
-        type="primary"
-        disabled={participants.length < 3}
-        onPress={() => {
+          title="REALIZAR SORTEO"
+          type="primary"
+          disabled={participants.length < 3}
+          onPress={() => {
             try {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-            startShuffle();
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+              startShuffle();
             } catch (e: any) {
-            Alert.alert('Error', e.message);
+              Alert.alert('Error', e.message);
             }
-        }}
-        style={styles.shuffleButton}
+          }}
+          style={styles.shuffleButton}
         />
+      </View>
     </View>
-    </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({
-container: {
+  container: {
     flex: 1,
     backgroundColor: Theme.colors.background,
     paddingTop: 60,
     paddingHorizontal: Theme.spacing.lg,
-},
-center: {
+  },
+  center: {
     justifyContent: 'center',
     alignItems: 'center',
-},
-hero: {
+  },
+  hero: {
     marginTop: 60,
     marginBottom: 40,
-},
-absoluteFooter: {
+  },
+  absoluteFooter: {
     paddingVertical: 24,
     backgroundColor: Theme.colors.background,
-},
-shuffleButton: {
+  },
+  shuffleButton: {
     shadowColor: Theme.colors.primary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,
-}
+  }
 });
