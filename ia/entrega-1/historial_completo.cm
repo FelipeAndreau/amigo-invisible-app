@@ -13,14 +13,14 @@ ASSISTANT: Análisis de alcance_e1.md realizado. Se definió el MVP como una apl
 ---
 
 [TURN 2]
-USER: osea ya puedo ver el fornt? pero que hiciste exactamente de la fase 1
+USER: osea ya puedo ver el fornt
 
 ASSISTANT: Explicación detallada de la implementación de RF-01 a RF-05: Creación de evento, gestión de participantes, algoritmo Fisher-Yates (Derangement), revelación por presión prolongada y persistencia con AsyncStorage.
 
 ---
 
 [TURN 3]
-USER: l poeo a e sdk 51 el celu usa 54
+USER: sdk 51 el celu usa 54
 
 ASSISTANT: Corrección técnica inmediata. Se actualizó el proyecto de Expo SDK 51 a SDK 54 para garantizar compatibilidad con dispositivos de 2026. Se ajustaron versiones de React 19 y React Native 0.81.
 
@@ -69,7 +69,7 @@ ASSISTANT: Generación de toda la documentación formal: Alcance (User Stories G
 ---
 
 [TURN 10]
-USER: temrinala app funcional en local, usa todo lo que sea necesario a nivel skills
+USER: temrinala app funcional en local, usa todo lo que sea necesario 
 
 ASSISTANT: Refactorización final. Se crearon componentes compartidos (Button, Input) y componentes de dominio (EventHeader, ParticipantList, RevealCard). Se implementaron LayoutAnimations para fluidez visual.
 
@@ -83,7 +83,7 @@ ASSISTANT: Configuración de Git. Plan de 75 commits quirúrgicos (15 por person
 ---
 
 [TURN 12]
-USER: usa tus skills para definirlobien, en las tas quiero que pongas el git add lso archivos que irian en ese caso, ademas faltna muhos commits, te dije 20 o mas , ademas falta el archivo explciando como levantar todo y probarlo
+USER: usa tus skills para definir lo bien, en las tas quiero que pongas el git add lso archivos que irian en ese caso, ademas faltna muhos commits, te dije 20 o mas , ademas falta el archivo explciando como levantar todo y probarlo
 
 ASSISTANT: Expansión masiva de tareas. 15 commits por persona con comandos `git add` específicos. Generación de README.md integral con guía de Docker y Frontend.
 
@@ -97,7 +97,7 @@ ASSISTANT: Diseño de arquitectura DevOps. Creación de `Dockerfile.dev` para Go
 ---
 
 [TURN 14]
-USER: quiero que los scripts no los hagas asi, queiro que les hagas un punteo a ellos de lo qu trabaja su feature... dime como funciona el codigo de la entrega 1
+USER: dime como funciona el codigo de la entrega 1
 
 ASSISTANT: Reescritura de guiones a formato punteo técnico. Explicación profunda del algoritmo de Derangement, el Custom Hook `useEvent` y la persistencia local.
 
@@ -111,7 +111,7 @@ ASSISTANT: Explicación arquitectónica: Package-by-feature Flat. Se aclaró la 
 ---
 
 [TURN 16]
-USER: baja los cambios de develop y asipuedo hacer pr
+USER: baja los cambios de develop 
 
 ASSISTANT: Sincronización de ramas. Merge de origin/develop en feature/infraestructura. Subida final a GitHub.
 
