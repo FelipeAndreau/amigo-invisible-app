@@ -1,0 +1,7 @@
+services:
+  backend:
+    build: ./server
+    container_name: amigo-invisible-api
+  frontend:
+    build: ./client
+    container_name: amigo-invisible-mobile

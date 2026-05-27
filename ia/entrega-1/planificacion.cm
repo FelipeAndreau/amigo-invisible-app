@@ -1,0 +1,1427 @@
+Proyecto App Amigo Invisible
+https://gemini.google.com/share/4ab8ae17dca4
+Creado con Pro 21 de abril de 2026 a las 08:50 p.m. Publicación: 25 de mayo de 2026 a las 11:08 a.m.
+
+Tengo que hace un proyecto para desarrollo de aplicaciones móviles, en el que debo desarrrollsr en base a esto ,, iba a hacer un app para el juego de mi amigo invisible, es muy ambicioso? Sería online con chat interno y demás decime que opinas
+
+Para el trabajo integrador de Desarrollo de Aplicaciones Móviles 2026, la idea de una app de "Amigo Invisible" es excelente porque se adapta perfectamente al criterio de escalabilidad progresiva que exige la cátedra. No es necesariamente "muy ambiciosa" si logras segmentar bien las funciones en las tres entregas obligatorias.  
+
+Aquí te doy mi opinión y una estructura sugerida para que cumplas con los requisitos del documento:
+¿Es muy ambicioso?
+
+No, es un tema ideal. El documento pide un "Núcleo mínimo" que pueda existir de forma aislada. Un chat interno y el modo online son funciones avanzadas que encajan muy bien en las etapas de expansión horizontal y vertical (Entregas 2 y 3).  
+Propuesta de Escalabilidad (Las 3 Entregas)
+
+Para que el docente te apruebe el tema, podrías presentar este esquema de crecimiento:  
+Entrega 1: MVP Básico (30%)
+
+    Funcionalidad: Un "Amigo Invisible" local. El usuario ingresa una lista de nombres en una sola pantalla, y la app realiza el sorteo mostrando el resultado a cada uno en el mismo dispositivo (sin internet).  
+
+    Figma: Flujo simple de carga de participantes y pantalla de resultado del sorteo.  
+
+    Técnica: Almacenamiento local (SQLite o Room) para guardar los nombres temporalmente.  
+
+Entrega 2: Escalado Funcional (30%)
+
+    Expansión Horizontal: Registro de usuarios y creación de "Grupos" u "Eventos".  
+
+    Online: Los usuarios se unen mediante un código de grupo. Aquí entra el Chat Interno básico por grupo.  
+
+    Autenticación: Implementación de Login (Firebase Auth o similar) para que cada uno vea quién le tocó en su propio celular.  
+
+Entrega 3: Producto Final (40%)
+
+    Expansión Vertical: Gestión de múltiples grupos por usuario (ej: Amigo Invisible del trabajo, de la familia, etc.).  
+
+    Pulido: Notificaciones push cuando alguien envía un mensaje al chat, filtros de sorteo (que A no pueda regalarle a B) y lista de deseos (wishlist).  
+
+    Seguridad: Reglas de base de datos para que nadie pueda ver quién le tocó a los demás.  
+
+Puntos clave que no debes olvidar
+
+    Uso de IA: Desde la Entrega 1, debés registrar todas tus consultas a Claude u otros modelos en un archivo .cm. No borres ningún chat, ya que la transparencia total es condición para aprobar.  
+
+    Video de Demo: En cada entrega, todos los integrantes del grupo deben hablar y mostrar la app funcionando en tiempo real.  
+
+    Fechas límite: La Entrega 1 es el martes 12 de mayo de 2026 a las 23:59 hs. Tenés tiempo para armar un buen diseño en Figma antes de programar.  
+
+Mi consejo: El chat interno es lo que más tiempo te puede llevar. Si ves que se complica, dejalo como el "gran cierre" de la Entrega 3 para asegurar que el núcleo del sorteo funcione perfecto en la Entrega 1 y 2.  
+
+¿Ya tenés definido el grupo de 2 a 4 personas?   
+
+Okey que lenguajes y arquitectura recomendas?
+
+Para un proyecto con los requisitos de esta cátedra, donde se valora la escalabilidad y el uso de IA como asistente, te recomiendo un stack que sea moderno y fácil de integrar con servicios en la nube.  
+
+Considerando que la facultad brinda soporte avanzado en Android Nativo (Kotlin) y React Native, aquí tienes las mejores opciones:  
+1. Lenguaje y Framework
+
+    Opción A: React Native (Recomendada para chat y tiempo real)
+
+        Por qué: Te permite desarrollar más rápido las interfaces de usuario y el chat. Al ser multiplataforma, cumple bien con el criterio de "aplicación móvil real".  
+
+        IA: Claude y Copilot tienen un desempeño excelente generando código en JavaScript/TypeScript y componentes de React.
+
+    Opción B: Kotlin (Android Nativo)
+
+        Por qué: Es la opción ideal si querés aprovechar al máximo el soporte de los docentes. Es más robusto para manejar el estado de la app y la navegación compleja.  
+
+2. Arquitectura de la App
+
+Para cumplir con los estándares de calidad y facilitar la escalabilidad vertical, te sugiero:  
+
+    Patrón MVVM (Model-View-ViewModel): Es el estándar actual. Separa la lógica de negocio (el sorteo del amigo invisible) de la interfaz (las pantallas de Figma), lo cual es un criterio de evaluación.  
+
+    Clean Architecture: Organizar el código por capas (Data, Domain, UI). Esto te servirá para que, cuando en la Entrega 2 agregues el chat, no tengas que romper lo que ya hiciste en la Entrega 1.  
+
+3. Backend y Base de Datos (Clave para el Chat)
+
+Como la guía menciona la integración con Firebase o APIs REST en la Entrega 2, esta es la ruta más eficiente:  
+
+    Firebase Authentication: Para el login de los usuarios.  
+
+    Firestore (NoSQL): Ideal para el chat interno y para actualizar quién le toca a quién en tiempo real sin configurar un servidor propio.
+
+    Cloud Functions (Opcional): Podrías usarlo para ejecutar el algoritmo del "sorteo" de forma segura en el servidor y no en el celular de los chicos (para que nadie haga trampa).
+
+4. Gestión de Estado
+
+    React Native: Context API o Redux Toolkit.
+
+    Kotlin: StateFlow o LiveData dentro de los ViewModels.  
+
+    Tip para la Entrega 1: En la documentación técnica (archivo doc_tecnica_e1.pdf), recordá que debés justificar por qué elegiste estas tecnologías. Podés decir que elegiste Firebase por su facilidad para escalar horizontalmente en la Entrega 2.  
+
+¿Con cuál de los dos lenguajes te sentís más cómodo trabajando actualmente?
+
+A ver lo que pasa es, yo tengo que desarrollar un app funcional o puede ser una página y en iPhone vote que podes agregarla al inicio, como es eso? Como podría hacerlo? O es solo Android studio no entiendo
+
+Lo que mencionas de agregar una página al inicio en el iPhone se refiere a las PWA (Progressive Web Apps). Es una excelente alternativa si no querés lidiar con las complicaciones de subir una app a la App Store o si querés usar tecnologías web en lugar de Android Studio.
+
+Aquí te explico cómo funciona y si te sirve para la entrega:
+1. ¿Qué es una PWA?
+
+Es básicamente un sitio web desarrollado con HTML, CSS y JavaScript que, mediante un archivo de configuración llamado manifest.json y un script llamado Service Worker, le dice al teléfono: "Ey, puedo funcionar como una app".
+
+    En iPhone: El usuario abre Safari, toca el botón de "Compartir" y elige "Agregar a inicio". Aparecerá un icono en su pantalla principal y, al abrirlo, no se ve la barra de navegación del navegador; parece una app nativa.
+
+    En Android: El navegador (Chrome) suele mostrar un cartelito que dice "Instalar aplicación".
+
+2. ¿Se puede usar para el trabajo integrador?
+
+Según la Guía de Trabajo Integrador 2026 que subiste, el objetivo es el "Desarrollo de Aplicaciones Móviles".
+
+    La buena noticia: Las PWA se consideran desarrollo móvil moderno.
+
+    La advertencia: Deberías consultar en el Foro del CVG o con María Laura o Matías si aceptan una PWA pura. A veces, las cátedras prefieren que uses un framework que genere un paquete instalable (como un .apk para Android), aunque por dentro sea web.
+
+3. ¿Cómo podrías hacerlo?
+
+Si decidís ir por el camino de tecnologías web (como React), tenés dos opciones principales para que parezca una app:
+
+    Opción A: PWA Pura (Web)
+
+        Usas React o Vue.
+
+        Configuras el manifest.json (para el icono y colores).
+
+        Usas un Service Worker para que funcione offline (clave para la Entrega 1).
+
+    Opción B: Capacitor / Ionic (Híbrida)
+
+        Programas con tecnologías web (HTML/JS), pero Capacitor "envuelve" tu web y la convierte en una app de verdad que podés instalar. Es el punto medio perfecto entre una web y Android Studio.
+
+4. ¿Es mejor que Android Studio?
+
+Para tu proyecto de "Amigo Invisible" con chat:
+
+    Curva de aprendizaje: Si ya sabés algo de web, hacer una PWA con React es mucho más rápido que aprender Kotlin y Android Studio desde cero.
+
+    Chat en tiempo real: Implementar un chat con Firebase es muy sencillo en JavaScript/React.
+
+    Multiplataforma: La misma app que hacés para el iPhone de tu amigo funcionará en tu Android sin cambiar una línea de código.
+
+Mi recomendación:
+Si te sentís cómodo con desarrollo web, planteale a los profes: "Queremos desarrollar una PWA con React y Firebase para asegurar la compatibilidad multiplataforma y la actualización en tiempo real del chat".
+
+Para la Entrega 1 (12 de mayo), podrías tener el sitio web ya funcionando con el manifiesto configurado para que se pueda "instalar" en el inicio.
+
+¿Te manejás mejor con HTML/JavaScript o preferirías aprender un lenguaje nuevo como Kotlin?
+
+Vos que decís que haga? Ósea no se si van a querer algo funciona mal o no al final
+
+Mi recomendación es que no te compliques con una PWA pura si no estás seguro de que la acepten, pero tampoco sufras con Android Studio si no es lo tuyo. La mejor opción para vos, considerando que sos estudiante de la UTN La Plata y ya tenés experiencia en backend con Go y AWS, es usar un framework híbrido.
+
+Acá te doy mi opinión de qué camino seguir para asegurar la nota y que la app sea funcional:
+1. El camino más seguro: React Native o Flutter
+
+Estos frameworks te permiten programar una sola vez y generar una app que se puede instalar en un Android (el archivo .apk) y también verla en un iPhone.
+
+    ¿Por qué te conviene? Porque cumplen con el requisito de "app móvil" sin obligarte a usar solo Android Studio. Además, al usar JavaScript/TypeScript (React Native) o Dart (Flutter), la integración con Firebase para el chat es casi instantánea.
+
+    Funcionalidad: Te aseguras de que sea "funcional". Lo que los profes (María Laura y Matías) no quieren es que entregues una página web que solo se vea bien; quieren que use funciones del celular (notificaciones, cámara, almacenamiento local, etc.).
+
+2. Sobre la PWA (lo que viste en iPhone)
+
+Si decidís hacer una web que se agrega al inicio, corrés el riesgo de que en la Entrega 3 te bajen puntos si la consigna exige específicamente el uso de componentes nativos o sensores del dispositivo.
+
+    Mi consejo: Usá React Native. Es muy parecido al desarrollo web, pero el resultado es una aplicación real. Como ya sabés de backend y Docker, la lógica de la app te va a resultar fácil; lo que más tiempo te va a llevar es la interfaz (Figma).
+
+3. Aprovechá tu perfil de Backend
+
+Dado que trabajaste en GlobalLogic y manejás GoLang y AWS, podrías destacar mucho si hacés que el "corazón" del sorteo del Amigo Invisible sea un microservicio (quizás en una Lambda de AWS) que la app consulte.
+
+    Para la Entrega 1: Hacé que funcione todo local en el teléfono. Simple, sin errores.
+
+    Para la Entrega 2: Conectalo a tu backend o a Firebase. Ahí es donde metés el chat.
+
+En resumen, ¿qué haría yo en tu lugar?
+
+    Tecnología: Usaría React Native con Expo. Expo es una herramienta que te permite probar la app en tu iPhone o Android escaneando un código QR, sin cables y sin configurar Android Studio al principio. Es lo más parecido a la facilidad de una web pero con potencia de app.
+
+    Estrategia: No apuntes a todo de una. Para el 12 de mayo, entregá una app que solo permita anotar a los pibes y que el teléfono te diga "A vos te tocó X" cuando le pasás el celu a tu amigo. Con eso ya tenés el MVP (Mínimo Producto Viable) aprobado.
+
+    IA: Como la cátedra pide usar IA, usá Claude para que te genere el esqueleto en React Native. Recordá guardar todos esos prompts en el archivo .cm que pide la guía.
+
+Si querés, podemos empezar a armar la estructura del proyecto en React Native ahora mismo para que veas que no es tan difícil como parece. ¿Te animás?
+
+Y como se ve en b iPhone ? Ósea el tema es como hago yo para mostrar la app desde un móvil, se me entiende?
+
+Se entiende perfecto. Lo que te preocupa es cómo pasar de tener código en tu computadora a que el profesor o tus amigos vean la "app" funcionando en su celular, especialmente si es un iPhone.
+
+Para mostrar la app desde un móvil tenés tres caminos principales, dependiendo de qué tecnología elijas:
+1. El camino de la PWA (Lo que mencionabas del "botón de inicio")
+
+Si hacés una web y la configurás como PWA, mostrarla es lo más fácil del mundo:
+
+    Cómo se hace: Subís tu código a un servicio gratuito como Vercel o Firebase Hosting. Esto te da un link (ejemplo: amigoinvisible-utn.vercel.app).
+
+    Cómo se ve en iPhone: Abrís Safari, pegás el link, tocás el icono de "Compartir" (el cuadradito con la flecha) y elegís "Agregar a inicio".
+
+    Resultado: Se crea un icono en tu pantalla de inicio. Al tocarlo, se abre a pantalla completa, sin las barras del navegador. Parece una app real.
+
+2. El camino de React Native con Expo (El más recomendado para la UTN)
+
+Si querés que sea una app de verdad pero sin renegar con cables o configuraciones complejas de Apple (que son un dolor de cabeza):
+
+    Cómo se hace: Usás un framework llamado Expo.
+
+    Cómo se ve en iPhone: Te bajás una app del App Store que se llama "Expo Go". En tu computadora, al ejecutar el proyecto, te sale un código QR.
+
+    Resultado: Escaneás el QR con la cámara de tu iPhone y la app que estás programando se "teletransporta" a tu celular y abre dentro de Expo Go. Podés caminar por la facultad con la app en el bolsillo y mostrarla sin problemas.
+
+3. El camino Nativo (Android Studio / Xcode)
+
+Este es el más difícil para mostrar en iPhone si no tenés una Mac:
+
+    Android: Conectás el celu por USB, activás "Depuración USB" y la app se instala como un archivo .apk.
+
+    iPhone: Necesitás una Mac, instalar Xcode y conectar el iPhone por cable. Además, Apple te pide una cuenta de desarrollador para que la app no venza a los 7 días.
+
+Mi consejo para tu caso:
+
+Considerando que sos de Gonnet, que estudiás en la UTN La Plata y que tenés experiencia con Go y AWS, no pierdas tiempo con Xcode o configuraciones pesadas.
+
+Andá por React Native + Expo.
+
+    Cumplís con que sea una "App Móvil" (no solo una web).
+
+    La podés mostrar en cualquier iPhone o Android con el código QR o instalando el archivito.
+
+    Podés usar tu conocimiento de backend para conectar el chat mediante una API.
+
+¿Qué te parece? Si querés, podemos empezar a definir qué pantallas tendría que tener ese "Amigo Invisible" en Figma para la Entrega 1, así ya tenés algo visual para mostrarles a los profes.
+
+Que es un pwa
+
+Una PWA (Progressive Web App) es, en esencia, un sitio web que utiliza tecnologías modernas para ofrecer una experiencia de usuario casi idéntica a la de una aplicación nativa de iOS o Android.  
+
+Aquí te detallo sus características principales y por qué encajan con lo que buscás:
+¿Cómo funciona?
+
+    Instalabilidad: Permite que los usuarios agreguen el sitio a su pantalla de inicio (como viste en el iPhone) sin pasar por el App Store o Google Play.  
+
+    Service Workers: Son scripts que corren en segundo plano y permiten que la app funcione offline o con mala conexión, cargando datos desde el caché.  
+
+    Manifiesto (manifest.json): Un archivo de configuración que define el nombre, los iconos y los colores de la app para que, al abrirse desde el inicio, no se vea la barra de direcciones del navegador.  
+
+Ventajas para tu proyecto
+
+    Multiplataforma: Desarrollás una sola vez y funciona en cualquier dispositivo que tenga un navegador moderno.  
+
+    Acceso a funciones del dispositivo: Pueden acceder a la cámara, geolocalización y enviar notificaciones push (en Android de forma nativa y en iOS con ciertas versiones recientes).  
+
+    Sin fricción: No necesitás que tus amigos descarguen un archivo pesado; solo les pasás un link y ellos le dan a "Agregar a inicio".
+
+Relación con el Trabajo Integrador
+
+    Escalabilidad: Podés empezar con una web simple en la Entrega 1 y convertirla en una PWA completa con chat en tiempo real para la Entrega 2.  
+
+    IA: Herramientas como Claude son excelentes generando el código para el manifest.json y los service workers necesarios para que el docente vea que aplicaste técnicas avanzadas.  
+
+    Documentación: En tu informe técnico, podés justificar el uso de PWA basándote en la agilidad de despliegue y la experiencia de usuario fluida.  
+
+¿Te gustaría que veamos qué archivos básicos necesitás para transformar una web común en una PWA para tu Amigo Invisible?
+
+Quiero que hagas un Mail explicándole la idea a mi profesora, y diciéndole si es posible hacerlo como progressive Web Up, ya que es la forma más rápida como para tener una aplicación Mobile con iPhone
+
+Para escribirle a María Laura, es importante que el mensaje sea profesional pero directo, demostrando que ya analizaste la viabilidad técnica y cómo se ajusta a las entregas de la materia.
+
+Aquí tenés una propuesta de correo:
+
+Asunto: [DAM 2026] Consulta sobre propuesta de Trabajo Integrador - Aplicación "Amigo Invisible"
+
+Estimada María Laura,
+
+Espero que se encuentre muy bien. Le escribo para presentarle la idea de proyecto de mi grupo para el Trabajo Integrador de este ciclo lectivo y realizarle una consulta técnica sobre la plataforma de desarrollo.
+
+Nuestra intención es desarrollar una aplicación para gestionar el "Amigo Invisible". El objetivo es que la app resuelva desde el sorteo inicial hasta la comunicación entre los participantes. Tenemos planificada una escalabilidad progresiva en tres etapas:
+
+    Entrega 1: Un MVP con funcionamiento local para carga de participantes y sorteo básico.
+
+    Entrega 2: Incorporación de persistencia en la nube (Firebase), gestión de grupos y un chat interno en tiempo real.
+
+    Entrega 3: Pulido de experiencia de usuario, notificaciones push y filtros avanzados para el sorteo.
+
+Respecto a la implementación, quería consultarle si es posible desarrollar el proyecto como una Progressive Web App (PWA).
+
+Consideramos esta opción por dos motivos principales:
+
+    Compatibilidad Multiplataforma: Es la manera más eficiente que encontramos para que la aplicación sea totalmente funcional y "configurable como app" tanto en Android como en iPhone (mediante la opción "Agregar a inicio"), sin las limitaciones de distribución de las tiendas oficiales.
+
+    Stack Tecnológico: Nos permite utilizar tecnologías web modernas (como React) que se integran perfectamente con servicios de tiempo real para el chat, asegurando una experiencia fluida.
+
+¿Considera que este enfoque cumple con los requisitos de la cátedra para ser evaluado como una aplicación móvil?
+
+Quedo atento a sus comentarios para avanzar con la documentación de la primera entrega.
+
+Saludos cordiales,
+
+[Tu Nombre]
+Estudiante de Ingeniería en Sistemas de Información
+UTN - Facultad Regional La Plata
+Unos consejos antes de mandarlo:
+
+    Menciona a tu grupo: Si ya tenés compañeros, agregalos en el "Cc" del mail o mencioná sus nombres en el cuerpo del mensaje.
+
+    El archivo .cm: Acordate de que todo lo que hablamos hoy ya forma parte de tu "bitácora" de uso de IA. Guardá estos prompts para el archivo que tenés que entregar el 12 de mayo.
+
+    Argumento extra: Si te llega a preguntar por qué no Android Studio, podés decirle que por tu experiencia previa con Go y AWS, te interesa enfocarte más en la lógica de integración y la escalabilidad del sistema que en la compilación nativa.
+
+Quiero que le vayas tan corto y no expliques eso de las entregas yo quiero que le digas la idea que sería y si lo podemos trabajar como una PWA?
+
+Entendido, vamos a hacerlo mucho más directo y al grano, enfocándonos solo en la propuesta y la consulta técnica de la PWA.
+
+Aquí tenés la versión corta:
+
+Asunto: [DAM 2026] Consulta Proyecto Amigo Invisible - PWA
+
+Estimada María Laura,
+
+Le escribo para consultarle sobre la validez técnica de nuestra idea para el trabajo integrador. Queremos desarrollar una aplicación de "Amigo Invisible" que gestione sorteos, grupos y un chat interno.
+
+Nuestra intención es trabajarla como una Progressive Web App (PWA). Elegimos este formato porque nos permite una implementación multiplataforma rápida y funcional tanto en Android como en iOS (mediante "Agregar a inicio"), sin depender de las tiendas oficiales.
+
+¿Es posible realizar el proyecto bajo esta modalidad para la materia?
+
+Saludos cordiales,
+
+[Tu Nombre]
+UTN - FR La Plata
+Un par de consejos:
+
+    El nombre del juego: Puse "Amigo Invisible" porque es descriptivo, pero si ya tenés un nombre más "pro" para la app, podés cambiarlo.
+
+    Envío: Te recomiendo mandarlo con copia a tus compañeros de grupo para que la profe vea que ya están organizados.
+
+¿Querés que te ayude con algo más para la primera entrega o el diseño en Figma?
+
+O sea básicamente sería trabajarlo como una página, pero tirada para Mobile en teoría con su aquella con su Frontera su base de datos. Qué tecnología en el según el PDF se pueden usar para el tema de la base de datos para bacán
+
+Exacto, la idea de la PWA es que el usuario la use como una aplicación móvil (instalada en el inicio), pero por detrás es una web con esteroides que se comunica con un servidor.
+
+Según la guía de la cátedra para 2026, estas son las tecnologías que podés usar para el Backend y la Base de Datos:
+1. Firebase (La opción más recomendada)
+
+La guía menciona explícitamente a Firebase como una solución ideal para gestionar datos y usuarios. Te resuelve varios problemas de una:
+
+    Base de datos: Podés usar Cloud Firestore o Realtime Database. Es perfecta para el chat de tu "Amigo Invisible" porque los mensajes aparecen al instante sin que tengas que refrescar la página.
+
+    Autenticación: Ya te da el sistema de login (por mail, Google, etc.) resuelto.
+
+    Hosting: Te sirve para subir tu PWA y que tenga el link HTTPS que los navegadores exigen para dejarte "Agregar al inicio".
+
+2. API REST Propia
+
+Si preferís usar tus conocimientos de GoLang, podés armar tu propio backend. La guía permite el uso de cualquier tecnología siempre que esté documentada:
+
+    Base de datos: Podés usar SQL (como PostgreSQL o MySQL) o NoSQL (como MongoDB).
+
+    Endpoints: Tendrás que documentar todos los puntos de acceso (rutas) que use tu app en el archivo doc_tecnica_e2.pdf.
+
+    Seguridad: Deberás explicar cómo protegés los datos y cómo manejás los tokens de sesión (JWT).
+
+3. Otras herramientas mencionadas
+
+    Claude / IA: No es una base de datos, pero la guía te obliga a usarla para que te ayude a diseñar el modelo de datos y el código del backend.
+
+    Notificaciones: Para que la app sea "pro", podés usar servicios de notificaciones push (como FCM de Firebase) para avisar cuando alguien mande un mensaje al chat.
+
+En resumen: Lo más rápido para llegar a la Entrega 2 (9 de junio) con el chat funcionando es usar Firebase. Pero si querés lucirte con lo que ya sabés de Go, armar una API REST propia es totalmente válido y te daría muchos puntos en "Decisión Tecnológica".
+
+¿Te sentís más cómodo con Firebase o preferís armar el backend en Go?
+
+Qué lenguaje y arquitectura recomiendas para este proyecto si se lleva a hacer en PDA, yo tenía pensado hacer un Riad con un gol y una base de datos en postres SQL y agregar autentificación y mide el Word. Por supuesto sería más que nada como si trabajara con una página web, no que recomiendas para algo más de ese estilo.
+
+Para un proyecto tipo PWA (Progressive Web App) en la UTN, tu idea de usar React + Go + PostgreSQL es excelente. No solo es un stack profesional y escalable (como pide la guía ), sino que aprovecha al máximo tu experiencia previa en GlobalLogic y con herramientas de backend.  
+
+Aquí te detallo cómo estructurarlo para que encaje perfectamente con los requisitos de la cátedra:
+1. Stack Tecnológico Recomendado
+
+    Frontend: React (con Vite). Es ideal para PWAs porque es liviano, rápido y Claude tiene un soporte excelente para ayudarte con los componentes.  
+
+    Backend: Go (Golang). Al ser un lenguaje compilado y eficiente, justifica muy bien el criterio de "calidad profesional" en la documentación técnica.  
+
+    Base de Datos: PostgreSQL. Te permite manejar relaciones complejas (usuarios, grupos de amigos, sorteos realizados) de forma segura.  
+
+    Autenticación: Podés usar JWT (JSON Web Tokens) implementado en Go. Es lo más común para APIs REST y cumple con el requisito de seguridad de la Entrega 2.  
+
+2. Arquitectura de la Aplicación
+
+Para que la cátedra te ponga una nota alta en el criterio de "Calidad de código", te sugiero esta organización:  
+
+    Arquitectura Hexagonal o Clean Architecture (en Go):
+
+        Middewares: Implementá uno para la validación del JWT y otro para el manejo de CORS (fundamental para que el frontend React pueda hablar con el backend Go).
+
+        Handlers: Para recibir las peticiones de la PWA.
+
+        Services: Donde vivirá la lógica del sorteo (asegurando que nadie se saque a sí mismo).
+
+    Frontend (React):
+
+        Service Workers: Fundamental para que sea una PWA y funcione "offline first" en la Entrega 1.  
+
+        Context API: Para manejar el estado global (usuario logueado, grupo actual).
+
+3. Cómo justificarlo ante María Laura y Matías
+
+En la Entrega 1 (12 de mayo) , tendrás que presentar la Decisión Tecnológica. Podés usar estos argumentos:  
+
+    Escalabilidad: Al usar Go y Postgres, la app puede crecer de un sorteo simple (E1) a un sistema con miles de usuarios y chat (E2/E3) sin problemas de performance.  
+
+    PWA: Justificá que elegiste PWA para garantizar que cualquier compañero (tenga iPhone o Android) pueda usarla simplemente escaneando un QR y dándole a "Agregar a inicio".  
+
+4. El "Toque" para la Nota Final
+
+Como trabajaste con AWS, para la Entrega 3 podrías mencionar que usás Docker  para deployar el backend en una instancia o usar S3 para guardar las fotos de perfil de los usuarios. Eso demuestra integración de conocimientos de otras materias.  
+
+    Ojo con los Logs de IA: Recordá que, elijas la tecnología que elijas, tenés que registrar todas las charlas con la IA sobre cómo armar el middleware en Go o los componentes en React en tu archivo .cm.  
+
+¿Te parece bien si armamos el Checklist de lo que tendrías que tener para el 12 de mayo con este stack?   
+
+Eso del archivo. CM cómo sería porque desconozco totalmente eso
+
+El archivo .cm es un requisito específico de esta cátedra para registrar de forma transparente cómo usaste la Inteligencia Artificial durante el desarrollo. No es un formato de archivo estándar de programación, sino una bitácora de conversaciones que debés ir armando.  
+
+Aquí te explico cómo funciona y cómo prepararlo para que no te bajan puntos:
+1. ¿Qué es el archivo .cm?
+
+Es un archivo (puede ser Markdown .md o un PDF) que contiene la transcripción completa de tus chats con la IA (Claude, ChatGPT, etc.).  
+
+    Regla de oro: No podés editar, recortar ni "limpiar" las conversaciones.  
+
+    Contenido: Debe incluir desde cómo le pediste ayuda para el middleware en Go hasta cómo resolviste un bug en el CSS de la PWA.  
+
+2. Estructura de carpetas requerida
+
+La guía pide que organices la evidencia en una carpeta llamada /ia/ con subcarpetas por entrega:  
+
+    /ia/entrega-1/: Archivo .cm con los chats de la etapa inicial e índice de temas.  
+
+    /ia/entrega-2/: Archivo .cm acumulado (chats de E1 + E2).  
+
+    /ia/entrega-3/: Archivo .cm final completo con todo el proceso del cuatrimestre.  
+
+3. ¿Cómo lo vas armando?
+
+Cada vez que uses una IA para el proyecto, debés guardar ese diálogo. Podés hacerlo de dos formas:
+
+    Manual: Copiás y pegás el prompt y la respuesta en un documento.
+
+    Exportar: Si usás Claude o ChatGPT, podés usar la opción de "Compartir chat" o extensiones para guardar la página completa como PDF.  
+
+4. ¿Qué más debe acompañar al .cm?
+
+Además de los chats, en cada entrega tenés que incluir:
+
+    Lista de Skills: Un resumen de para qué usaste la IA (ej: "Generación de modelos en Postgres", "Debugging de service workers").  
+
+    Reflexión (Solo en E3): Una página por integrante del grupo explicando qué les sirvió, qué falló y cómo cambió su forma de trabajar con estas herramientas.  
+
+    Nota importante: En la defensa oral, los docentes pueden preguntarte sobre cualquier parte del código que haya generado la IA. Si entregás el .cm pero no entendés lo que dice el código de Go que "te hizo" la IA, se considera que no lo entregaste.  
+
+Como estás planeando usar React, Go y Postgres, te recomiendo empezar hoy mismo a guardar estas consultas en un documento. ¿Querés que te ayude a redactar el primer prompt para que Claude te ayude a estructurar la base de datos en Postgres?
+
+Buenos días.
+
+
+La idea me parece bien. Sobre PWA, la materia está orientada específicamente al desarrollo de aplicaciones móviles nativas o con frameworks mobile (como React Native, Flutter, Android nativo, etc.), y una PWA si bien es una tecnología válida en otros contextos, no cumple con ese requisito y no se adapta a los conocimientos mínimos que pretendemos se lleven.
+
+
+Les propongo conservar la idea pero desarrollarla en un entorno móvil.
+
+
+Cualquier cosa nos mantenemos en contacto. Gracias
+
+Buen día. Bueno, ya tenemos la respuesta de la cátedra y fue bastante clara: PWA no es una opción para este trabajo integrador. María Laura y Matías quieren que te lleves conocimientos de desarrollo móvil real (nativo o híbrido), así que tenemos que pivotar el stack tecnológico.  
+
+No te preocupes, porque tu idea del Amigo Invisible sigue siendo totalmente válida, solo que ahora hay que "envolverla" en un entorno mobile.  
+¿Qué te conviene hacer ahora?
+
+Dado que ya tenés experiencia con React y Go, el camino más corto y seguro es React Native.
+
+    React Native (con Expo): Es lo más parecido a programar en web. Vas a poder usar componentes de React, pero el resultado final será una app de verdad (un .apk para Android y se puede ver en iPhone).  
+
+    El Backend (Go + Postgres): ¡Esto lo podés mantener!  La cátedra permite que la app se conecte a una API externa. Podés hostear tu backend en AWS (como ya sabés) o usar Firebase para el chat y la base de datos para ahorrar tiempo de infraestructura.  
+
+Cómo cambia tu plan para la Entrega 1 (12 de mayo)
+
+    Tecnología: En el documento de Decisión Tecnológica, tendrás que justificar por qué usás React Native (por ejemplo: para aprovechar el stack de React y asegurar una app instalable en Android/iOS).  
+
+    Diseño Figma: Vas a tener que diseñar pensando en una app móvil (gestos, botones táctiles de al menos 48x48dp, navegación por tabs o stack).  
+
+    Video de Demo: En lugar de mostrar un link en el navegador, vas a tener que mostrar la app corriendo en un emulador o directamente en tu celular (usando la app Expo Go en tu iPhone).  
+
+Sobre el archivo .cm (Recordatorio importante)
+
+Como la cátedra es estricta con la transparencia total, asegurate de guardar esta conversación y las que tengas con la IA para elegir entre React Native o Flutter. Todo eso debe ir en la carpeta /ia/entrega-1/.  
+
+¿Querés que armemos el primer boceto de cómo quedarían los Requerimientos Funcionales (RF) para que los profes vean que ya estás encaminado con el entorno móvil?   
+
+Queiro que me agregue que iría en cada una de las 3 entras que debemos hacer,, y usaríamos Expo go para conectarnos a la app?
+
+Ya que la profesora confirmó que debe ser una aplicación móvil real, Expo Go es exactamente la herramienta que necesitás. Te permite ejecutar el código de React Native directamente en tu iPhone (o Android) sin cables, lo cual es ideal para mostrarle los avances en clase o grabar los videos de las demos que pide la guía.
+
+Aquí tenés el desglose de qué incluir en cada entrega para cumplir con la escalabilidad progresiva y los requisitos de la cátedra:
+Entrega 1: MVP Básico (Martes 12 de mayo)
+
+El objetivo es demostrar que la app funciona "en frío", sin internet, enfocándote en la interfaz y la lógica básica.
+
+    Funcionalidad: Carga manual de nombres en una lista y un botón de "Sortear". El resultado se muestra en pantalla (ej: "Pasale el celu a Juan... te tocó: Pedro").
+
+    Técnica: Uso de AsyncStorage para que si cerrás la app, los nombres no se borren.
+
+    Documentación: * Diseño en Figma de todas las pantallas.
+
+        Decisión tecnológica: Justificar por qué React Native + Expo.
+
+        Archivo .cm con los chats de hoy sobre el cambio de PWA a React Native.
+
+Entrega 2: Escalado Funcional (Martes 9 de junio)
+
+Acá es donde la app se vuelve "online" y aprovechás tus conocimientos de backend.
+
+    Funcionalidad: * Registro e Inicio de sesión (Autenticación).
+
+        Creación de grupos con un código de invitación.
+
+        Chat Interno: Un chat por grupo para que los participantes coordinen o den pistas.
+
+    Técnica: * Conexión de la app con tu API en Go y base de datos PostgreSQL (o Firebase si preferís simplificar).
+
+        Implementación de los Middlewares de seguridad que mencionaste.
+
+    Documentación: Diagrama de arquitectura y documentación de los endpoints de la API.
+
+Entrega 3: Producto Final (Martes 30 de junio)
+
+Es el momento de pulir y agregar "magia" para asegurar la nota alta.
+
+    Funcionalidad: * Notificaciones Push: Avisar cuando alguien escribe en el chat o cuando el sorteo ya está listo.
+
+        Filtros de sorteo (ej: que las parejas no se puedan sacar entre sí).
+
+        Lista de deseos (Wishlist) para cada usuario.
+
+    Técnica: * Manejo de estados complejos y optimización de la interfaz.
+
+        Uso de algún sensor o librería nativa (ej: compartir el código de invitación por WhatsApp o usar la cámara para la foto de perfil).
+
+    Documentación: Informe final, reflexión sobre el uso de la IA y el archivo .cm completo.
+
+¿Cómo usarían Expo Go?
+
+Es muy sencillo y te va a salvar la vida para las demos:
+
+    En tu computadora, instalás las librerías y ejecutás el comando para iniciar el proyecto.
+
+    Se va a generar un código QR en la terminal.
+
+    Abrís la cámara de tu iPhone, escaneás el QR y se te va a abrir la app Expo Go (bajala del App Store).
+
+    Magia: Tu aplicación se carga en el iPhone. Si cambiás algo en el código en tu PC, el cambio se ve al instante en el celular.
+
+Esto es perfecto para cumplir con el requisito de la cátedra de "mostrar la app funcionando en tiempo real" durante el video de cada entrega.
+
+¿Querés que te ayude a redactar los Requerimientos Funcionales (RF) para el documento de la Entrega 1?
+
+Expo go le funcionaría también todo lo que es el online y demás no?
+
+Sí, Expo Go funciona perfectamente con toda la parte online (APIs, bases de datos, chat). La diferencia no está en la conexión, sino en cómo se accede al hardware del teléfono.  
+
+Aquí te explico cómo funcionaría la parte online en tu proyecto:
+¿Cómo maneja Expo Go el "Online"?
+
+    Consumo de APIs: Tu app en React Native se conectará a tu backend en Go mediante peticiones fetch o axios. Mientras tu backend esté corriendo (localmente o en AWS), Expo Go lo verá.  
+
+    WebSockets / Tiempo Real: Para el chat interno, podés usar WebSockets o Firebase. Expo Go soporta estas conexiones de forma nativa, permitiendo que los mensajes lleguen al instante entre los teléfonos de tus amigos.  
+
+    Base de Datos: Tu app no se conecta "directo" a PostgreSQL (por seguridad); le pide los datos a tu API de Go, y Go se encarga de hablar con la base de datos.  
+
+Lo que tenés que tener en cuenta (Importante para las entregas)
+
+Aunque Expo Go es muy potente, la cátedra evaluará cómo manejás la escalabilidad. Así quedarían tus entregas adaptadas a este entorno:  
+Entrega	
+
+Foco de la App (Online)
+	
+
+Lo que usás de Expo
+E1 (MVP)	
+
+Offline: Lógica local de sorteo sin necesidad de internet.
+	
+
+Expo Go + AsyncStorage: Guardás los nombres localmente en el celu.
+E2 (Escalado)	
+
+Online: Autenticación de usuarios y creación de grupos en la nube.
+	
+
+Expo Go + HTTP/API: Conexión con tu backend de Go y Postgres.
+E3 (Final)	
+
+Full Online: Chat en tiempo real y notificaciones push.
+	
+
+Expo Go + WebSockets: El producto final escalado y pulido.
+El pequeño gran detalle del Localhost
+
+Cuando estés programando en tu casa:
+
+    Tu celular (con Expo Go) y tu computadora (con el backend de Go) deben estar en la misma red Wi-Fi.
+
+    No podés usar http://localhost:8080 en la app, porque para el iPhone "localhost" es el propio teléfono. Tenés que usar la IP de tu computadora (ej: http://192.168.1.50:8080).
+
+¿Cómo seguir con el archivo .cm?
+
+Desde ahora, cualquier duda que le preguntes a la IA sobre cómo configurar React Native Navigation o cómo conectar React con Go, guardala. Recordá que la cátedra pide una carpeta /ia/entrega-1/ con todos esos logs completos y sin recortar.  
+
+¿Querés que te pase un ejemplo de cómo podrías redactar el RF-01 (Requerimiento Funcional 1) de tu Entrega 1 para el documento de alcance?   
+
+Cómo sería offline? Tipo no creo que podamos am hacerlo
+
+Entiendo perfectamente tu duda. Cuando escuchás "offline" en una app de sorteos, suena raro porque pensás: "¿Cómo se van a enterar los otros?".
+
+Pero para la Entrega 1, el concepto de offline que pide la cátedra no significa que la app sea mágica, sino que el MVP (Mínimo Producto Viable) debe funcionar de forma local en un solo dispositivo para demostrar que la lógica del sorteo y la interfaz están bien hechas antes de meterte en el lío de los servidores.   
+
+Aquí te explico cómo sería esa dinámica "Offline" para cumplir con la primera entrega:
+La lógica del "Pasa el Celular" (Entrega 1)
+
+Como todavía no hay base de datos ni cuentas de usuario (eso va en la E2), el flujo sería así:
+
+    Carga de datos: Abrís la app en tu celular y anotás los nombres de todos tus amigos (Juan, Pedro, María, etc.) en una lista.   
+
+    El Sorteo: Tocás el botón "Sortear". La app, usando un algoritmo en JavaScript (React Native), asigna los nombres.
+
+    La Revelación: La pantalla dice: "Pasale el celular a Juan". Juan lo agarra, toca un botón que dice "Ver mi amigo invisible", la app le muestra el nombre de su asignado, y Juan toca "Listo, ocultar". Luego la app dice: "Pasale el celular a Pedro", y así sucesivamente.
+
+¿Por qué hacerlo así en la E1?
+
+    Demostrar el Núcleo Mínimo: La guía pide una "funcionalidad central que pueda existir de forma aislada".  El algoritmo del sorteo es ese núcleo.  
+
+    Persistencia Local: Podés usar AsyncStorage. Si se te apaga el celu o cerrás la app, cuando la vuelvas a abrir, la lista de amigos sigue ahí. Eso es lo que los profes quieren ver como "manejo de datos" en la primera etapa.   
+
+    Evitar Bugs de Red: En la primera entrega, los profes evalúan que la app no tenga bugs críticos y que la UX sea cuidada.  Al no depender de internet, te asegurás de que la demo en clase no falle por culpa del Wi-Fi de la facultad.  
+
+Lo que tenés que preparar para el 12 de mayo (E1)
+
+Para cumplir con el Checklist de la página 16 de la guía:   
+
+    RF (Requerimientos Funcionales):
+
+        RF-01: El sistema debe permitir agregar nombres a una lista.
+
+        RF-02: El sistema debe realizar un sorteo aleatorio asegurando que nadie se sortee a sí mismo.
+
+        RF-03: El sistema debe mostrar el resultado de forma privada para cada integrante.
+
+    Figma: Diseñar estas 3 o 4 pantallas (Carga, Sorteo, Revelación).   
+
+    Video: Grabás la pantalla usando Expo Go mostrando cómo cargás los nombres y cómo se ve el resultado.   
+
+¿Te cierra la idea de hacerlo así para la primera entrega y dejar el chat y la base de datos para la segunda? Es la forma más segura de sacarte un 10 en el MVP.
+
+bien ayudame con lo siguinte. [10:58, 17/4/2026] Santi Dangelo: Cada grupo debe agregar una pestaña nueva sin nombre y poner nombre y apellido ahi de cada uno de los integrantes. Una vez todos hayan creado su pestaña enumeraremos y cada grupo tendrá su numero. Los grupos deben ser idealmente de CINCO PERSONAS, si no llegan a 5 de a cuatro. No menos de 4 ni mas de 5. En la misma hoja agregar el parrafo resumen de lo que tratara el trabajo dividido claramente en las 3 entregas y poniendo foco en la escalabilidad de las mismas. Ademas poner el link al drive que usaran para entregar como backup de CVG.
+
+[10:58, 17/4/2026] Santi Dangelo: MiAmigoInvisible app: El objetivo de esta app es gestionar sesiones del juego "Amigo invisible". La app nos permite crear y administrar usuarios, crear y administrar sesiones de juego, selección de "amigos invisibles" al azar, chat y pistas con el "amigo invisible"
+
+
+Primera entrega: MVP, nos permite crear un usuario, crear una partida y agregar a otros usuarios. Sortear "amigos invisibles". ¿Gestionar partidas?
+
+
+Segunda entrega: Gestion de pistas dentro de una partida de amigo invisible, habilita la posibilidad de enviar desde quien hace el regalo a quien lo escrecibe
+
+
+Tercera entrega: Gestion completa de partidas, notificaciones de fechas y pistas, chat privado y anonimo con tu "amigo invisible"
+
+
+Tengo que hacer la primera etrega como llamo al repo de github?
+
+¡Excelente, Felipe! Ya tenés la estructura definida para el proyecto "Mi Amigo Invisible". Vamos a organizar todo según las instrucciones de Santi y la guía oficial para que no se te pase nada en la Entrega 1.
+1. Nombre del Repositorio en GitHub
+
+Para el nombre del repo, te recomiendo algo profesional y descriptivo que siga las buenas prácticas de desarrollo:
+
+    Opción recomendada: mi-amigo-invisible-app o amigo-invisible-dam2026.
+
+    Importante: Recordá que la guía pide que para la primera entrega trabajes en una rama específica llamada entrega-1 y que el commit final tenga un tag identificatorio.
+
+2. Resumen para la Hoja de Grupo (Escalabilidad)
+
+Santi pidió un párrafo que explique la escalabilidad. Aquí tenés una propuesta basada en tu idea y los criterios de la guía:
+
+    Resumen del Proyecto: Mi Amigo Invisible
+    La aplicación busca digitalizar y mejorar la experiencia del juego "Amigo Invisible", permitiendo la gestión integral de partidas. La escalabilidad se divide en:
+
+        Entrega 1 (Núcleo mínimo): MVP funcional que permite la creación de usuarios, gestión de una partida local y el algoritmo de sorteo aleatorio entre los participantes cargados.
+
+        Entrega 2 (Expansión horizontal): Implementación de persistencia en la nube y gestión de múltiples sesiones simultáneas. Se introduce la "Gestión de Pistas", permitiendo el envío de mensajes unidireccionales del regalador al receptor.
+
+        Entrega 3 (Expansión vertical + Pulido): Producto final con gestión completa de fechas, notificaciones push, y un sistema de chat privado y anónimo (bidireccional) integrado para coordinar detalles del intercambio.
+
+3. Checklist para la Entrega 1 (MVP)
+
+Para el 12 de mayo, tenés que tener listo lo siguiente dentro de tu repositorio y el Drive:
+
+    Documentación (PDFs):
+
+        alcance_e1.pdf: Descripción del problema, RF (Crear usuario, partida, agregar amigos, sortear) y RNF.
+
+        doc_tecnica_e1.pdf: Justificación de por qué usás React Native + Expo, diagrama de navegación y estado de la app.
+
+    Diseño: Link a Figma con los wireframes y el flujo principal (Login -> Lista de amigos -> Sorteo).
+
+    Código: Rama entrega-1 con el código funcional, un archivo README.md con instrucciones y sin credenciales hardcodeadas.
+
+    Video: Demo de máximo 3 minutos donde todos los integrantes hablen y muestren la app corriendo en tiempo real (pueden usar el emulador o el celular con Expo Go).
+
+    IA: Carpeta /ia/entrega-1/ con el archivo .cm que contenga todas las charlas que tuvimos sobre el cambio de PWA a React Native y la estructura del proyecto.
+
+4. Organización del Drive Backup
+
+No olvides crear la carpeta en el Drive con este formato:
+
+    /Entrega 1/
+
+        repo_link.txt (con el link a GitHub)
+
+        alcance_e1.pdf
+
+        doc_tecnica_e1.pdf
+
+        figma_link.txt
+
+        /ia/ (con el .cm)
+
+¿Ya tenés a los otros 3 o 4 integrantes para completar el grupo de 4 o 5 personas que pidió Santi? Recordá que la guía oficial decía de 2 a 4, pero la instrucción del docente en el mensaje de WhatsApp (5 personas) siempre tiene prioridad sobre el PDF general.  
+
+no usamos un gitflow? directo todo a entrega-1?
+
+Para este trabajo, lo ideal es que sí usen un flujo de trabajo organizado, pero siguiendo la jerarquía que pide la cátedra en el archivo oficial para asegurar que la corrección sea sencilla para los docentes.
+
+Aquí te explico cómo manejar el Gitflow para que sea profesional y cumpla con la consigna:
+1. Estructura de Ramas (Gitflow sugerido)
+
+No subas todo directamente a entrega-1 desde el primer día. Trabajen de forma organizada y usen entrega-1 como su rama de "producción" para esta etapa:  
+
+    main (o master): Dejala vacía o con el README inicial por ahora. Según la guía, esta rama se entrega recién al final (E3).  
+
+    entrega-1 (Rama de Estabilización): Esta es la rama que el docente va a clonar. Solo debés hacer merge aquí cuando una funcionalidad esté terminada y testeada.  
+
+    develop: Donde integran los cambios de todos los miembros del grupo antes de mandarlos a la rama de entrega.
+
+    feature/nombre-funcionalidad: Cada uno trabaja su parte (ej: feature/login, feature/sorteo-algoritmo) en ramas separadas y luego hacen un Pull Request a develop.
+
+2. El momento de la entrega
+
+La guía es muy específica sobre cómo debe quedar el repositorio al momento del cierre (12 de mayo):  
+
+    Rama obligatoria: El código final de esta etapa debe estar en la rama entrega-1.  
+
+    Tag de versión: Es muy recomendable crear un tag (ej: v1.0-mvp) en el commit final de la entrega para que quede "congelado" y los profes sepan qué corregir.  
+
+    README.md: Debe estar actualizado en esa rama con las instrucciones de cómo correr el proyecto con Expo Go.  
+
+3. Evidencia del Proceso (IA y Logs)
+
+Recordá que el archivo .cm y la carpeta /ia/entrega-1/ también deben estar en el repositorio.  
+
+    Si usan ramas de feature, pueden ir guardando los logs de IA de cada funcionalidad por separado y luego consolidarlos todos en la carpeta final antes de la entrega.  
+
+    Consejo: Asegurate de que el historial de commits muestre que todos trabajaron (no un solo commit gigante con todo el código), ya que la calidad del código y la organización también se evalúan.  
+
+Resumen de comandos para arrancar:
+Bash
+
+# Crear la rama de la entrega y pararse ahí
+git checkout -b entrega-1
+
+# Crear la rama de desarrollo
+git checkout -b develop
+
+# Cuando termines una función (ej. login)
+git checkout -b feature/login
+# ... programar ...
+git add .
+git commit -m "feat: implementacion de login local"
+git checkout develop
+git merge feature/login
+
+Cuando tengan el MVP listo para entregar, hacen el merge de develop a entrega-1, ponen el tag y mandan el link.  
+
+ git clone https://github.com/FelipeAndreau/amigo-invisible-app.git
+
+Clonando en 'amigo-invisible-app'...
+
+remote: Enumerating objects: 3, done.
+
+remote: Counting objects: 100% (3/3), done.
+
+remote: Compressing objects: 100% (2/2), done.
+
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+
+Recibiendo objetos: 100% (3/3), listo.
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git remote add https://github.com/FelipeAndreau/amigo-invisible-app.git
+
+fatal: no es un repositorio git (ni ninguno de los directorios superiores): .git
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git init
+
+ayuda: Usando 'master' como el nombre de la rama inicial. Este nombre de rama predeterminado
+
+ayuda: está sujeto a cambios. Para configurar el nombre de la rama inicial para usar en todos
+
+ayuda: de sus nuevos repositorios, reprimiendo esta advertencia, llama a:
+
+ayuda: 
+
+ayuda:  git config --global init.defaultBranch <nombre>
+
+ayuda: 
+
+ayuda: Los nombres comúnmente elegidos en lugar de 'master' son 'main', 'trunk' y
+
+ayuda: 'development'. Se puede cambiar el nombre de la rama recién creada mediante este comando:
+
+ayuda: 
+
+ayuda:  git branch -m <nombre>
+
+Inicializado repositorio Git vacío en /home/filip/app-moviles/.git/
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git remote add https://github.com/FelipeAndreau/amigo-invisible-app.git
+
+uso: git remote add [<opciones>] <nombre> <url>
+
+
+    -f, --[no-]fetch      realizar fetch a las ramas remotas
+
+    --[no-]tags           import all tags and associated objects when fetching
+
+                          or do not fetch any tag at all (--no-tags)
+
+    -t, --[no-]track <rama>
+
+                          rama(s) para rastrear
+
+    -m, --[no-]master <rama>
+
+                          rama master
+
+    --[no-]mirror[=(push|fetch)]
+
+                          configurar remote como mirror al cual empujar o desde el cual realizar fetch
+
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git brnach
+
+git: 'brnach' no es un comando de git. Mira 'git --help'.
+
+
+El comando más similar es
+
+        branch
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git branch
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git remote -v
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git init
+
+Reinicializado el repositorio Git existente en /home/filip/app-moviles/.git/
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git remote -v
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git branch -a
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git branch -m
+
+fatal: se necesita el nombre de la rama
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git switch entrega-1
+
+fatal: referencia inválida: entrega-1
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ git branch  entrega-1
+
+fatal: nombre de objeto no válido: 'master'
+
+filip@filip-HP-EliteBook-840-G5:~/app-moviles$ 
+
+¡Tranquilo, Felipe! Esos errores son súper comunes cuando estás configurando un repo nuevo. El problema principal es que hiciste un git clone, pero después intentaste configurar todo de nuevo afuera de la carpeta que se creó. Además, recordá que la guía pide específicamente trabajar sobre una rama llamada entrega-1.  
+
+Aquí tenés los pasos exactos para limpiar el lío y dejarlo como pide la cátedra:
+1. Entrar a la carpeta correcta
+
+Cuando hiciste el primer git clone, se creó una carpeta llamada amigo-invisible-app. Tenés que entrar ahí para que los comandos funcionen:
+Bash
+
+cd amigo-invisible-app
+
+2. Configurar las ramas para la entrega
+
+Como la guía exige que la rama de la primera entrega se llame entrega-1, vamos a crearla y dejarla lista:  
+Bash
+
+# Crear la rama entrega-1 y cambiarte a ella
+git checkout -b entrega-1
+
+# Confirmar que estás en la rama correcta
+git branch
+
+3. ¿Por qué te daban error los comandos?
+
+    git remote add: Te faltaba ponerle un nombre al remoto (usualmente se usa origin). De todos modos, si ya hiciste clone, el remoto ya está configurado. Podés verificarlo con git remote -v.
+
+    fatal: nombre de objeto no válido: 'master': Git no te dejaba crear una rama nueva porque el repositorio estaba vacío (sin commits). Primero tenés que tener al menos un archivo para poder crear ramas.
+
+Próximos pasos para cumplir con la Entrega 1:
+
+    Estructura de archivos: Empezá a crear la carpeta /ia/entrega-1/ para guardar nuestro archivo .cm con estos chats.  
+
+    Primer Commit:
+    Bash
+
+    git add .
+    git commit -m "feat: estructura inicial del proyecto para entrega-1"
+    git push origin entrega-1
+
+    Drive de Backup: Recordá que, además de GitHub, tenés que subir los PDFs (alcance_e1.pdf y doc_tecnica_e1.pdf) a la carpeta del Google Drive que compartieron con los profes.  
+
+Ojo: Como sos usuario de HP Elitebook (lo veo en tu terminal), si llegás a tener problemas de rendimiento con el emulador de Android Studio, recordá que usar Expo Go en tu iPhone es mucho más liviano y es lo que te va a permitir mostrar la app "funcionando en tiempo real" como pide la rúbrica.  
+
+¿Querés que te ayude a armar el archivo README.md inicial para que el repo ya quede profesional desde el primer día?  
+
+para que estructura hago? de carpetas pongo backedn frotnedn expo y docs?
+
+Para que tu repositorio sea profesional y cumpla estrictamente con la Guía de Trabajo Integrador 2026, la estructura debe ser clara y facilitar la corrección de los docentes. Dado que vas a usar React Native (Expo) y un backend en Go, lo ideal es separar las responsabilidades.  
+
+Aquí tenés la estructura de carpetas recomendada para la rama entrega-1:
+Estructura de Carpetas Sugerida
+
+    /client (o /frontend): Aquí va todo el código de Expo/React Native.  
+
+    /server (o /backend): Aquí va tu código en Go y los archivos de Postgres/Docker.  
+
+    /docs: Carpeta fundamental para los PDFs obligatorios de la entrega (alcance_e1.pdf, doc_tecnica_e1.pdf, etc.).  
+
+    /ia: Carpeta obligatoria exigida por la cátedra para la transparencia en el uso de IA.  
+
+        /ia/entrega-1/: Aquí debés guardar el archivo .cm con nuestras conversaciones y el índice de temas.  
+
+Detalles por Carpeta (Entrega 1)
+1. Carpeta /docs
+
+Es lo primero que mirarán los profes. Debe contener:
+
+    alcance_e1.pdf: Definición del problema, RF y RNF.  
+
+    doc_tecnica_e1.pdf: Justificación de React Native + Go y el diagrama de navegación.  
+
+    diseno_figma.pdf (o link en un .txt): Capturas de tus wireframes y mockups.  
+
+2. Carpeta /ia
+
+No la olvides, porque representa una parte importante de la nota.  
+
+    logs_ia_e1.cm: El archivo con todas las transcripciones de Claude/IA sin editar.  
+
+    skills_utilizadas.md: Un listado de para qué usaste la IA en esta etapa.  
+
+3. Archivos en la Raíz (Root)
+
+    .gitignore: Para no subir la carpeta node_modules, archivos .env o ejecutables de Go.  
+
+    README.md: Instrucciones claras de cómo clonar el repo y cómo ejecutar la app en Expo Go.  
+
+    CHANGELOG.md: Historial de cambios realizados para esta entrega.  
+
+Cómo crearlo rápido desde la terminal:
+
+Estando dentro de tu carpeta amigo-invisible-app, podés ejecutar:
+Bash
+
+mkdir client server docs ia
+mkdir ia/entrega-1
+touch README.md .gitignore CHANGELOG.md
+
+Consejo de amigo: Como la Entrega 1 es el MVP Básico enfocado en el caso mínimo funcional, podés tener la carpeta /server creada pero vacía (o con un "Hola Mundo" en Go) y concentrar todo tu esfuerzo de código en /client para que el sorteo local funcione perfecto en Expo Go.  
+
+¿Querés que te ayude a redactar el contenido que debería ir en el README.md para que los profes sepan exactamente cómo probar tu app?  
+
+dame los comanos para crear la estrutura de carpetas
+
+Para crear la estructura que te recomendé de forma profesional y organizada dentro de tu repositorio, podés ejecutar los siguientes comandos en tu terminal de Linux (HP Elitebook).
+
+Asegurate de estar dentro de la carpeta amigo-invisible-app antes de empezar:
+Bash
+
+# 1. Crear las carpetas principales del proyecto
+mkdir client server docs ia
+
+# 2. Crear la subcarpeta específica para la Entrega 1 de IA
+mkdir -p ia/entrega-1
+
+# 3. Crear los archivos base en la raíz
+touch README.md .gitignore CHANGELOG.md
+
+# 4. Crear archivos placeholders para la documentación obligatoria de E1
+touch docs/alcance_e1.pdf docs/doc_tecnica_e1.pdf
+
+# 5. Crear el archivo para los logs de IA en la carpeta correspondiente
+touch ia/entrega-1/logs_ia_e1.cm
+
+¿Qué logramos con esto?
+
+    /client: Aquí inicializarás tu proyecto de Expo/React Native más adelante.  
+
+    /server: Espacio reservado para tu backend en Go y la base de datos PostgreSQL[cite: 2].
+
+    /docs: Donde guardarás los PDFs que pide la guía (Alcance y Técnica)[cite: 2].
+
+    /ia/entrega-1/: Carpeta obligatoria para cumplir con la transparencia en el uso de herramientas como Claude[cite: 2].
+
+    CHANGELOG.md: Archivo requerido para llevar el registro de cambios entre las 3 entregas[cite: 2].
+
+Recomendación para el .gitignore
+
+No olvides agregar esto a tu archivo .gitignore para no subir archivos innecesarios al repo:
+Plaintext
+
+node_modules/
+.expo/
+dist/
+.env
+*.exe
+
+Una vez que tengas esto, podés hacer tu primer commit a la rama entrega-1 para que el repositorio ya no esté vacío[cite: 2]. ¿Te gustaría que te ayude a redactar el contenido del README.md inicial?
+
+hace eto de manera completa teniendo en cuenta a donde queremso llevar le proyecto .1 Documento de Alcance
+
+Archivo: alcance_e1.pdf o alcance_e1.md. Extensión recomendada: 2-3 páginas.
+
+n Descripción del problema
+
+¿Qué problema resuelve la app? (1 párrafo concreto)
+
+¿A quién está dirigida? (perfil del usuario principal)
+
+¿Por qué una app móvil y no otra solución?
+
+n Requerimientos Funcionales (RF)
+
+Listado numerado (RF-01, RF-02, ...) con descripción clara
+
+Alcance E1: solo los RF incluidos en esta entrega
+
+Backlog: RF que se implementarán en E2 y E3 (mencionados brevemente)
+
+nn Requerimientos No Funcionales (RNF)
+
+Plataforma objetivo: Android (API mínima) o React Native (iOS/Android)
+
+Rendimiento esperado (ej: carga de pantalla < 2s)
+
+Requisitos de conectividad (offline first / requiere internet)
+
+Idioma de la interfaz, accesibilidad básica
+
+n User Stories + Criterios de Aceptación [OPCIONAL — sube la nota]
+
+Formato: 'Como [rol] quiero [acción] para [beneficio]'
+
+Mínimo 5 User Stories para E1 (si se incluyen)
+
+Cada US con al menos 2 criterios de aceptación (Given/When/Then)
+
+Indicar la prioridad: Alta / Media / Baja
+
+Nota: BONUS INTERDISCIPLINAR: Las User Stories y criterios de aceptación son contenidos de Ingenieria de
+
+Software / Analisis de Sistemas. Los grupos que las entreguen bien formuladas demostraran integracion de
+
+conocimientos de materias anteriores y suben su nota en este criterio.
+
+Aquí tenés el documento completo, redactado con un enfoque profesional y estructurado exactamente como lo exige la rúbrica para asegurar la mejor nota posible (incluyendo el bonus interdisciplinar de las User Stories).  
+
+Podés copiar este texto, pegarlo en un archivo Word o Google Docs, y exportarlo como alcance_e1.pdf para guardarlo en tu carpeta /docs.  
+Documento de Alcance - Entrega 1: MVP Básico
+
+Proyecto: Mi Amigo Invisible
+Plataforma: React Native (Expo)
+
+1. Descripción del problema
+
+    ¿Qué problema resuelve la app?
+    La organización tradicional del juego "Amigo Invisible" suele ser desordenada: los papeles físicos se pierden, ocurre con frecuencia que un integrante se sortea a sí mismo (obligando a reiniciar todo el proceso), y resulta complejo coordinar las reglas o mantener el anonimato. La aplicación digitaliza y centraliza este proceso, automatizando el sorteo para garantizar una aleatoriedad perfecta (sin auto-asignaciones) y facilitando una gestión segura de la información de los participantes desde la palma de la mano.
+
+    ¿A quién está dirigida?
+    A grupos de amigos, familiares, compañeros de oficina o estudiantes universitarios que deseen organizar intercambios de regalos de forma ágil, transparente y sin fricciones.
+
+    ¿Por qué una app móvil y no otra solución?
+    El sorteo presencial mediante la modalidad "pasa el dispositivo" requiere accesibilidad inmediata y una experiencia táctil intuitiva. Además, el smartphone es un dispositivo personal por excelencia, lo que resulta fundamental para asegurar la privacidad en el momento en que cada usuario revela en la pantalla a quién debe hacerle el regalo.
+
+2. Requerimientos Funcionales (RF)
+
+Alcance E1 (MVP Local):
+
+    RF-01: El sistema debe permitir al usuario crear un evento de "Amigo Invisible" asignándole un nombre identificatorio.
+
+    RF-02: El sistema debe permitir agregar nombres de participantes a la lista del evento actual.
+
+    RF-03: El sistema debe ejecutar un algoritmo de asignación aleatoria, garantizando de forma lógica que ningún participante se sortee a sí mismo.
+
+    RF-04: El sistema debe presentar una interfaz de revelación privada, donde el nombre asignado permanezca oculto hasta que el usuario correspondiente presione un botón en la pantalla.
+
+    RF-05: El sistema debe persistir los datos de los participantes y el resultado del sorteo de forma local (utilizando AsyncStorage) para evitar la pérdida de progreso si la aplicación se cierra inesperadamente.
+
+Backlog (Para implementarse en E2 y E3):
+
+  
+
+    E2 (Expansión horizontal): Registro y autenticación de usuarios en la nube, integración con base de datos externa para crear grupos online de múltiples dispositivos, y envío de mensajes/pistas unidireccionales (del regalador al receptor).
+
+    E3 (Expansión vertical): Gestión completa del ciclo de vida de múltiples partidas, notificaciones push (fechas límite, nuevos mensajes) y sistema de chat privado bidireccional completamente anónimo.
+
+3. Requerimientos No Funcionales (RNF)
+
+    Plataforma objetivo: Aplicación desarrollada en React Native (mediante Expo), garantizando compatibilidad multiplataforma nativa para Android e iOS.
+
+    Rendimiento esperado: Las transiciones de interfaz, la carga de pantalla y la ejecución del algoritmo de sorteo deben completarse en menos de 2 segundos.
+
+    Requisitos de conectividad: Para este MVP (Entrega 1), la aplicación debe operar bajo un esquema offline first, ejecutando toda su lógica y almacenamiento sin requerir conexión a internet.
+
+    Idioma y Accesibilidad: La interfaz gráfica estará íntegramente en español. Contará con tipografía legible (mínimo 14sp), alto contraste de colores y áreas táctiles de botones no menores a 48x48dp para asegurar una correcta usabilidad en pantallas móviles.
+
+4. User Stories y Criterios de Aceptación (Bonus Interdisciplinar)
+  
+
+    US-01: Creación de partida
+
+        Como organizador, quiero crear un evento de Amigo Invisible para empezar a cargar a los participantes.
+
+        Prioridad: Alta
+
+        Criterios de Aceptación:
+
+            Given que estoy en la pantalla de inicio, When ingreso un nombre para el evento y presiono "Crear", Then el sistema guarda el nombre y me redirige a la vista de gestión de participantes.
+
+            Given que el campo de nombre está vacío, When presiono "Crear", Then el sistema me muestra un error solicitando un nombre válido.
+
+    US-02: Gestión de participantes
+
+        Como organizador, quiero agregar los nombres de mis amigos a la lista para que formen parte del sorteo.
+
+        Prioridad: Alta
+
+        Criterios de Aceptación:
+
+            Given que estoy en la vista del evento, When escribo un nombre en el input y toco "Agregar", Then el nombre se renderiza en la lista inferior de forma inmediata.
+
+            Given que intento agregar un nombre que ya existe en la lista actual, When toco "Agregar", Then el sistema rechaza la acción e informa visualmente "El participante ya existe".
+
+    US-03: Ejecución del Sorteo
+
+        Como organizador, quiero iniciar el sorteo automático para que el sistema asigne a quién le regala cada persona de manera justa.
+
+        Prioridad: Alta
+
+        Criterios de Aceptación:
+
+            Given que la lista tiene 3 o más participantes cargados, When presiono "Realizar Sorteo", Then el algoritmo calcula las parejas sin auto-asignaciones y avanza a la pantalla de resultados.
+
+            Given que la lista tiene menos de 3 participantes, When intento sortear, Then el botón se encuentra inhabilitado o muestra un aviso de cantidad mínima requerida.
+
+    US-04: Revelación Privada
+
+        Como participante, quiero ver el resultado de mi asignación de forma protegida para asegurar que nadie más vea a quién me toca regalarle.
+
+        Prioridad: Alta
+
+        Criterios de Aceptación:
+
+            Given que la pantalla muestra mi nombre como el turno actual, When mantengo presionado el botón "Revelar mi amigo", Then el sistema me muestra el nombre objetivo.
+
+            Given que estoy viendo mi resultado, When suelto el botón o presiono "Ocultar y seguir", Then el nombre se esconde y la interfaz se prepara para el siguiente participante.
+
+    US-05: Persistencia de Sesión Local
+
+        Como usuario, quiero que la app guarde los datos localmente para no perder el progreso de la partida si cierro la aplicación por error.
+
+        Prioridad: Media
+
+        Criterios de Aceptación:
+
+            Given que agregué 4 participantes y cerré la app, When vuelvo a iniciarla, Then la lista de esos 4 participantes sigue disponible.
+
+            Given que el sorteo ya se realizó y se cerró la app en medio de las revelaciones, When vuelvo a abrirla, Then el estado del sorteo se recupera permitiendo continuar por donde se dejó.
+
+hace esto 4.2 Diseño UX/UI — Figma u otra herramienta
+
+Se recomienda Figma, pero se acepta cualquier herramienta con el mismo fin (Adobe XD, Penpot, Sketch, etc.).
+
+Entregar link con permisos de visualización para el docente + exportar pantallas en PDF.
+
+Desarrollo de Aplicaciones Móviles · Guía Trabajo Integrador 2026 Pág. 8
+
+n Wireframes (baja o media fidelidad)
+
+Todas las pantallas del flujo principal de E1
+
+Incluir estados: normal, cargando, error, vacío
+
+Navegación mapeada entre pantallas (flechas de flujo en Figma)
+
+nn Mockups / Diseño visual
+
+Pantallas clave con colores, tipografías e íconos definitivos
+
+Definir paleta de colores (mínimo: primario, secundario, error, fondo)
+
+Componentes reutilizables documentados en el Figma (botones, cards, inputs
+
+Para cumplir con el punto 4.2 Diseño UX/UI, como modelo de lenguaje no puedo "dibujar" el Figma por vos, pero sí puedo generarte el documento exacto que te servirá como mapa de ruta (blueprint) para que vos y tu grupo armen el Figma rapidísimo y cumplan con todos los requisitos que evalúan los profesores.
+
+Este documento detalla qué pantallas tienen que hacer, qué estados incluir, la paleta de colores y los componentes a diseñar. Podés guardar esto como un archivo en tu carpeta /docs o usarlo directamente como tu checklist para Figma.
+¿Cómo usar esto para tu entrega?
+
+    Abrí Figma: Creá un archivo nuevo.
+
+    Creá los Componentes: Armá primero los botones, colores y tipografías que te dejé en el punto 3 y 4. Usá el plugin "Lucide Icons" para los iconitos.
+
+    Armá las pantallas (Wireframes/Mockups): Agarrá un Frame de teléfono (ej. iPhone 14 o Android Large) y seguí el flujo del punto 1 y 2. Acordate de hacer las pantallitas "extra" para los errores (ej. cuando la lista está vacía).
+
+    Prototipado: En Figma, andá a la pestaña "Prototype" y uní los botones con las siguientes pantallas mediante flechas.
+
+    Entregable: Copiás el link de ese Figma (asegurate de poner "Anyone with the link can view") y lo pegás en un .txt para subir al CVG y al Drive junto con los PDFs.
+
+¡Con esto cubrís el 100% de lo que piden en "Mockups y Wireframes"! ¿Te queda alguna duda de cómo armar algo en Figma o querés que pasemos a la parte de código en React Native?
+Diseño UX/UI E1
+Definición de Diseño UX/UI - Entrega 1 (MVP)
+
+Proyecto: Mi Amigo Invisible
+Herramienta elegida: Figma
+1. Mapa de Navegación (Flujo Principal E1)
+
+Para representar en Figma mediante flechas de prototipado.
+
+El flujo del MVP local sigue una navegación lineal basada en "Stack Navigation":
+
+    Pantalla de Inicio (Crear Partida) -> Navega a ->
+
+    Pantalla de Gestión de Participantes -> Navega a ->
+
+    Pantalla de Sorteo (Loading) -> Navega a ->
+
+    Pantalla de Revelación (Turnos) -> Navega a ->
+
+    Pantalla de Fin (Resumen local)
+
+2. Wireframes y Estados Requeridos
+
+Se deben diseñar en Figma las siguientes vistas con sus respectivos estados para demostrar contemplación de casos límite (Edge cases).
+Pantalla 1: Inicio (Crear Partida)
+
+    Normal: Logo de la app, campo de texto "Nombre del evento" y botón "Comenzar".
+
+    Error: El usuario toca "Comenzar" con el campo vacío. El borde del input se pone rojo y aparece el texto: "Por favor, ingresa un nombre para el evento".
+
+Pantalla 2: Gestión de Participantes
+
+    Vacío (Empty State): Lista en blanco con una ilustración amigable y el texto: "Aún no hay participantes. ¡Agrega a tus amigos arriba!".
+
+    Normal: Input para escribir nombre, botón "+" y debajo la lista de nombres agregados (cada uno con un icono de basurero para eliminar).
+
+    Error: Alerta (o texto rojo debajo del input) indicando "Este nombre ya fue agregado" o "Se necesitan al menos 3 personas para sortear" si se presiona "Realizar Sorteo" antes de tiempo.
+
+Pantalla 3: Sorteo en progreso
+
+    Cargando (Loading State): Animación simple (spinner o icono de regalo moviéndose) con el texto "Mezclando los nombres en la galera...".
+
+Pantalla 4: Revelación Privada (El núcleo del E1)
+
+    Normal (Oculto): Texto grande "Es el turno de: [Nombre]". Un botón gigante en el centro que diga "Mantener presionado para revelar".
+
+    Estado Activo (Revelado): Al mantener presionado, el botón cambia y muestra "Le regalas a: [Nombre Objetivo]".
+
+    Navegación intermedia: Botón secundario para "Ocultar y pasar al siguiente".
+
+3. Mockups / Diseño Visual (UI)
+Paleta de Colores
+
+Se busca transmitir una sensación lúdica, festiva pero moderna y limpia.
+
+    Color Primario: #6C63FF (Violeta vibrante) - Usado en botones principales y header.
+
+    Color Secundario: #FF6584 (Rosa/Coral) - Usado para acentos, iconos de regalos o botones secundarios.
+
+    Color de Fondo: #F7F9FC (Gris azulado muy claro) - Reduce la fatiga visual frente al blanco puro.
+
+    Color de Error: #E53E3E (Rojo suave) - Para validaciones y el botón de eliminar participante.
+
+    Texto Principal: #2D3748 (Gris oscuro) - Para excelente legibilidad (contraste WCAG).
+
+Tipografía
+
+    Fuente Principal: Poppins o Inter (Disponibles gratis en Google Fonts / Figma).
+
+        Títulos (H1, H2): Poppins Bold (agradable, geométrica y amigable).
+
+        Cuerpo de texto / Inputs: Inter Regular (altamente legible en pantallas móviles).
+
+Íconos
+
+    Se utilizará una librería consistente como Feather Icons o Lucide (tienen plugins gratuitos en Figma) para iconos de: Plus (agregar), Trash (eliminar), Gift (regalo), Eye/Eye-off (revelar).
+
+4. Componentes Reutilizables (Design System básico)
+
+En Figma, estos elementos deben convertirse en "Componentes" (Ctrl+Alt+K) para mantener consistencia.
+
+    Botón Principal (Primary Button):
+
+        Fondo Color Primario, texto blanco, bordes redondeados (border-radius: 12px).
+
+        Variante: Botón Deshabilitado (Disabled) - Fondo gris claro, texto gris oscuro.
+
+    Input de Texto (Text Field):
+
+        Fondo blanco, borde sutil gris. Altura mínima de 48px (accesibilidad móvil).
+
+        Variante: Estado de "Focus" (borde color primario) y "Error" (borde color error).
+
+    Tarjeta de Participante (List Item Card):
+
+        Rectángulo blanco con sombra sutil (Drop shadow), nombre a la izquierda y botón de eliminar (basurero rojo) a la derecha.
+
+    Tarjeta de Revelación (Reveal Card):
+
+        Componente interactivo grande con patrón de regalo en el fondo, diseñado específicamente para ser tapado/destapado por el dedo del usuario.
+
+arma un prompt para explicarle a canva el tipo de wireframe que dbee hacer
+
+Para generar los wireframes o mockups en Canva (ya sea usando su herramienta de Estudio Mágico / Generador de Imágenes IA o para buscar plantillas base), lo mejor es darle un prompt muy descriptivo, enfocado en el diseño de interfaz (UI).
+
+Como las IA de generación de imágenes suelen entender mejor y dar mejores resultados en inglés para términos de diseño de interfaces, te preparé el prompt principal en inglés y otro en español por si usás el buscador de plantillas.
+Opción 1: Prompt para la IA generativa de Canva (Magic Media / Texto a Imagen)
+
+Copiá y pegá esto tal cual:
+
+    Prompt: "A set of 4 modern mobile app UI mockup screens for a 'Secret Santa' game application. Clean, playful, and minimalist design. The color palette includes vibrant violet (#6C63FF), coral pink (#FF6584), and a light gray-blue background (#F7F9FC).
+    Screen 1: Home screen with a title, a text input field, and a large violet 'Start' button.
+    Screen 2: A list of participant names in white cards with soft drop shadows, including a text input at the top with a '+' button.
+    Screen 3: A loading screen with a cute minimalist gift box icon in the center.
+    Screen 4: A reveal screen with a large, central interactive card featuring a gift pattern and a big button.
+    High quality, dribbble style, iOS UI, flat design, soft lighting, modern typography."
+
+Opción 2: Prompt / Palabras clave para buscar plantillas en Canva
+
+Si en lugar de generar una imagen de cero preferís buscar una plantilla editable en Canva para armar tu wireframe rápido, poné esto en el buscador de la pantalla de inicio:
+
+    Buscar: "Mobile App UI Kit clean minimalist" o "Mobile App Wireframe iOS"
+
+💡 Tip para Canva:
+Canva no es tan potente como Figma para hacer prototipos clickeables (con flechas de navegación reales que funcionen como app), pero para armar las imágenes estáticas (Mockups) que pide la entrega, es genial.
+
+    Buscá una plantilla de "App UI".
+
+    Cambiá los colores principales de esa plantilla por tus colores: Violeta (#6C63FF) y Rosa (#FF6584).
+
+    Cambiá los textos por los que definimos en el paso anterior (Ej: "Nombre del evento", "Realizar Sorteo").
+
+    Exportá esas pantallas en PDF y las subís a la carpeta /docs de tu repositorio.
+
+gemini o google no tenia una ia de disenios?
+
+Sí, ¡exactamente! Google tiene su propio modelo de generación y edición de imágenes, y lo tenés disponible directamente acá conmigo.
+
+El modelo que utilizo se llama Gemini 3 Flash Image (cuyo nombre oficial interno es Nano Banana 2). Es una herramienta de última generación que podés usar en este mismo chat para todo lo que es diseño visual.
+
+Acá te detallo lo que puede hacer:
+
+    Generación desde cero (Text-to-image): Podés pedirme que dibuje o diseñe algo simplemente describiéndolo con texto.
+
+    Edición avanzada (Image+text-to-image): Podés subir una imagen base y decirme qué querés modificarle o agregarle.
+
+    Composición y estilos (Multi-image-to-image): Puede tomar referencias y combinarlas para mantener una estética unificada.
+
+Para tu Trabajo Integrador:
+No hace falta que vayas a otra plataforma si querés algo rápido y directo. Podés pedirme que te genere las pantallas, los wireframes o los mockups de "Mi Amigo Invisible" acá mismo. Simplemente pegame el prompt detallado (como el que armamos recién para Canva) o decime exactamente qué pantalla necesitás visualizar, y yo te genero las opciones listas para descargar y adjuntar en tu carpeta de /docs.
+
+dame un prompt mas completo y explicando que es la app, y que tipo de wirerames necesito
+
+Aquí tenés un prompt mucho más completo y detallado. Está redactado en inglés porque los generadores de imágenes por IA (incluyéndome) comprenden mejor los términos técnicos de diseño de interfaces (UI/UX) en ese idioma.
+
+Este prompt le explica a la IA exactamente de qué trata la app, qué estilo visual buscamos y detalla cada una de las pantallas requeridas para la Entrega 1.  
+Copiá y pegá este prompt:
+
+    Prompt: "Design a set of 4 high-fidelity mobile app UI mockups for a 'Secret Santa' (Amigo Invisible) game manager application.
+
+    App Context: The app allows a group of friends to enter their names and the system randomly assigns who gives a gift to whom, ensuring no one gets themselves. The game is played in a 'pass-the-phone' offline mode where each user secretly reveals their match on the screen.
+
+    Design Style: Modern, clean, and playful UI. Flat design with soft shadows, high accessibility, and a friendly aesthetic suitable for iOS and Android.
+    Color Palette: Primary color is vibrant violet (#6C63FF), secondary/accent is coral pink (#FF6584), background is light grayish-blue (#F7F9FC), and text is dark gray (#2D3748) for high contrast. Typography should be a modern sans-serif like Poppins or Inter.
+
+    Required Screens:
+    Screen 1 (Home/Setup): A welcoming screen with a playful gift illustration, a text input field labeled 'Event Name', and a large, prominent violet primary button that says 'Create Event'.
+    Screen 2 (Participant Management): A list view. At the top, a text input with a '+' icon button next to it. Below, a clean list of added participant names displayed on white cards with soft drop shadows. Each card has a red 'trash' icon on the right. At the bottom, a primary button saying 'Start Draw'.
+    Screen 3 (Loading/Sorting): A minimalist loading screen showing a cute animated-style gift box or a magic hat, with text saying 'Mixing names...'.
+    Screen 4 (Private Reveal - Core Feature): The central focus is a large, interactive-looking card with a festive pattern. The screen has the text 'Pass the phone to: Juan'. Below it, a giant primary button that says 'Hold to Reveal Match'. The design must imply privacy and secrecy."
+
+¿Por qué este prompt funciona mejor?
+
+    Da contexto de uso: Al explicarle a la IA que es un juego de "pass-the-phone" (pasar el celular), la IA entiende que los elementos en pantalla (como el botón de revelar) deben ser grandes y fáciles de tocar.
+
+    Define la fidelidad: Le pide explícitamente "high-fidelity mobile app UI mockups" (Mockups de alta fidelidad), lo cual cumple directamente con la sección de "Mockups / Diseño visual" que pide tu guía.  
+
+    Manejo de paleta de colores: Le da los códigos HEX exactos, lo que obliga a la IA a mantener una consistencia de marca en todas las pantallas generadas.
+
+Si querés, podés pedirme directamente a mí que genere estas imágenes. Al tener integrado el modelo de generación de imágenes, puedo armar los diseños basándome en este mismo texto.
+Política de Privacidad de GoogleSe abrirá en una ventana nueva
+Condiciones del Servicio de GoogleSe abrirá en una ventana nueva
+Tu privacidad y GeminiSe abrirá en una ventana nueva
+
+Es posible que Gemini muestre información imprecisa, incluidos datos sobre personas, por lo que debes verificar sus respuestas. Otra persona creó este contenido. Podría ser impreciso o no seguro.

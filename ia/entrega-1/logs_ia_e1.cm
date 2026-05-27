@@ -1,0 +1,14 @@
+# LOGS DE IA - ENTREGA 1: AMIGO INVISIBLE
+
+## INFORMACIÓN GENERAL
+- **IA Utilizada**: Gemini CLI (Protocolo SDD)
+- **Fecha**: Mayo 2026
+- **Objetivo**: Desarrollo del MVP Local (Fase 1)
+
+## SKILLS GLOBALES ACTIVADAS
+1. **ui-ux-pro-max**: Diseño y accesibilidad.
+2. **api-design-principles**: Estructura del backend.
+3. **package-by-feature**: Organización del código.
+
+## RESUMEN DE PROMPTS
+La sesión incluyó el diseño desde cero, la corrección de errores de SDK 54, la implementación del algoritmo Fisher-Yates y la persistencia local.
