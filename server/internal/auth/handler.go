@@ -3,6 +3,7 @@ package auth
 import (
 	"amigo-invisible-server/internal/platform/auth"
 	"amigo-invisible-server/internal/platform/db"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,12 +12,51 @@ import (
 
 type AuthRequest struct {
 	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=6"`
+	Password string `json:"password" binding:"required,min=8"`
+}
+
+// validatePasswordStrength verifica que la contraseña cumpla con políticas de seguridad
+func validatePasswordStrength(password string) error {
+	if len(password) < 8 {
+		return errors.New("La contraseña debe tener al menos 8 caracteres")
+	}
+	
+	hasUpper := false
+	hasLower := false
+	hasNumber := false
+	
+	for _, char := range password {
+		switch {
+		case char >= 'A' && char <= 'Z':
+			hasUpper = true
+		case char >= 'a' && char <= 'z':
+			hasLower = true
+		case char >= '0' && char <= '9':
+			hasNumber = true
+		}
+	}
+	
+	if !hasUpper {
+		return errors.New("La contraseña debe contener al menos una mayúscula")
+	}
+	if !hasLower {
+		return errors.New("La contraseña debe contener al menos una minúscula")
+	}
+	if !hasNumber {
+		return errors.New("La contraseña debe contener al menos un número")
+	}
+	
+	return nil
 }
 
 func RegisterHandler(c *gin.Context) {
 	var req AuthRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := validatePasswordStrength(req.Password); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

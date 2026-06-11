@@ -2,12 +2,22 @@ package auth
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var secretKey = []byte("your-secret-key") // En producción usar variables de entorno
+var secretKey = []byte(getSecretKey())
+
+func getSecretKey() string {
+	key := os.Getenv("JWT_SECRET")
+	if key == "" {
+		// Fallback solo para desarrollo local
+		key = "dev-secret-key-change-in-production"
+	}
+	return key
+}
 
 type Claims struct {
 	UserID string `json:"user_id"`
