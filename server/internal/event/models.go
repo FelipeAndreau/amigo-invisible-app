@@ -3,11 +3,12 @@ package event
 import "time"
 
 type Event struct {
-	ID        string    `json:"id"`
-	UserID    string    `json:"user_id"`
-	Name      string    `json:"name"`
-	Status    string    `json:"status"` // draft, shuffled
-	CreatedAt time.Time `json:"created_at"`
+	ID         string    `json:"id"`
+	UserID     string    `json:"user_id"`
+	Name       string    `json:"name"`
+	Status     string    `json:"status"` // draft, shuffled
+	InviteCode string    `json:"invite_code,omitempty"`
+	CreatedAt  time.Time `json:"created_at"`
 }
 
 type Participant struct {
