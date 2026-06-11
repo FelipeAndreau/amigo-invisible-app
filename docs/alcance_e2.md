@@ -51,9 +51,31 @@
 - **When** el organizador pulsa "Realizar Sorteo",
 - **Then** el sistema muestra un error indicando que se requieren al menos 3 personas.
 
+## 5. Requerimientos No Funcionales (RNF) — E2
+
+### Seguridad (RNF-Seg)
+- **RNF-Seg-01:** Las contraseñas de usuario deben almacenarse hasheadas con bcrypt (cost factor 10+).
+- **RNF-Seg-02:** La comunicación entre cliente y servidor debe usar tokens JWT con expiración de 72 horas.
+- **RNF-Seg-03:** El secreto JWT debe configurarse mediante variables de entorno (no hardcodeado en código fuente).
+- **RNF-Seg-04:** Un participante solo puede ver su propia asignación; nunca la de otro participante.
+- **RNF-Seg-05:** Los Magic Links de revelación son de un solo uso; una vez visitados, quedan invalidados.
+
+### Mantenibilidad (RNF-Mant)
+- **RNF-Mant-01:** El código backend debe seguir una arquitectura modular: handlers, services, repositories y models separados.
+- **RNF-Mant-02:** El frontend debe usar componentes reutilizables y un design system centralizado (Theme, tokens de espaciado/colores/tipografía).
+- **RNF-Mant-03:** Todo el código debe estar documentado con CHANGELOG.md y README.md actualizados.
+- **RNF-Mant-04:** Las validaciones de negocio deben existir tanto en cliente como en servidor (defensa en profundidad).
+
+### Escalabilidad (RNF-Esc)
+- **RNF-Esc-01:** La base de datos debe usar índices en campos de búsqueda frecuente (users.email, events.user_id, participants.event_id).
+- **RNF-Esc-02:** El sistema debe soportar múltiples eventos por usuario sin degradación del rendimiento (prueba con 50+ eventos).
+- **RNF-Esc-03:** El esquema de datos debe permitir la futura adición de notificaciones push y chat sin migraciones destructivas.
+- **RNF-Esc-04:** El backend debe manejar timeouts de 5 segundos en todas las peticiones HTTP para evitar bloqueos.
+
 ## 4. Gestión de Excepciones y Validaciones
 
 1. **Excepción de Duplicados:** No se puede agregar dos participantes con el mismo email en un mismo sorteo.
 2. **Excepción de Autenticación:** Si el token JWT expira, el usuario es redirigido automáticamente al Login.
 3. **Regla de Negocio:** El organizador puede participar en su propio sorteo, pero el sistema debe garantizar mediante el algoritmo de *derangement* que nadie se asigne a sí mismo.
 4. **Validación de Link:** Si un Magic Link ya fue utilizado y la configuración del sorteo es de "un solo uso", el sistema mostrará un mensaje de "Acceso ya realizado".
+5. **Validación de Invitación:** No se puede unir a un evento que ya fue sorteado.

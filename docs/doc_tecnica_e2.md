@@ -11,15 +11,20 @@ Se ha implementado un sistema de autenticación basado en **JWT (JSON Web Tokens
 
 ## 2. Integración con Backend (API REST)
 
-| Método | Ruta | Descripción | Request |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/auth/register` | Registro de organizador | `{email, password}` |
-| `POST` | `/api/v1/auth/login` | Login de organizador | `{email, password}` |
-| `GET` | `/api/v1/events` | Listado (Protegido) | - |
-| `POST` | `/api/v1/events/:id/participants` | Agregar participante (Draft) | `{name}` |
-| `DELETE` | `/api/v1/events/:id/participants/:pid` | Eliminar participante | - |
-| `POST` | `/api/v1/events/:id/shuffle`| Ejecutar sorteo | - |
-| `GET` | `/r/:token` | Página Web de Revelación | - |
+| Método | Ruta | Descripción | Request | Auth |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/auth/register` | Registro de organizador | `{email, password}` | No |
+| `POST` | `/api/v1/auth/login` | Login de organizador | `{email, password}` | No |
+| `GET` | `/api/v1/events` | Listado de eventos del usuario | - | Sí (JWT) |
+| `POST` | `/api/v1/events` | Crear nuevo evento | `{name, participants[]}` | Sí (JWT) |
+| `DELETE` | `/api/v1/events/:id` | Eliminar evento | - | Sí (JWT) |
+| `GET` | `/api/v1/events/:id/participants` | Listar participantes | - | Sí (JWT) |
+| `POST` | `/api/v1/events/:id/participants` | Agregar participante | `{name}` | Sí (JWT) |
+| `DELETE` | `/api/v1/events/:id/participants/:pid` | Eliminar participante | - | Sí (JWT) |
+| `POST` | `/api/v1/events/:id/shuffle` | Ejecutar sorteo | - | Sí (JWT) |
+| `POST` | `/api/v1/events/:id/invite` | Generar código de invitación | - | Sí (JWT) |
+| `POST` | `/api/v1/events/join` | Unirse a evento con código | `{code, name}` | No |
+| `GET` | `/r/:token` | Página Web de Revelación | - | No (Magic Link) |
 
 ## 3. Estructura de Base de Datos (PostgreSQL)
 Se ha definido el esquema final en `server/internal/platform/db/schema.sql`:
