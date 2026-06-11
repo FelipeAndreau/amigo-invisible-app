@@ -5,19 +5,46 @@ import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { useAuth } from '../../shared/hooks/useAuth';
 import { apiClient } from '../../shared/utils/api';
+import { ValidationRules, ValidationMessages } from '../../shared/utils/validation';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegister, setIsRegister] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const { login } = useAuth();
 
-  const handleAuth = async () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert('Error', 'Completa todos los campos');
-      return;
+  const validateForm = (): boolean => {
+    let isValid = true;
+    setEmailError('');
+    setPasswordError('');
+
+    if (!email.trim()) {
+      setEmailError(ValidationMessages.required);
+      isValid = false;
+    } else if (!ValidationRules.email(email)) {
+      setEmailError(ValidationMessages.email);
+      isValid = false;
     }
+
+    if (!password.trim()) {
+      setPasswordError(ValidationMessages.required);
+      isValid = false;
+    } else if (isRegister) {
+      const passwordValidation = ValidationRules.password(password);
+      if (!passwordValidation.valid) {
+        setPasswordError(passwordValidation.errors.join('\n'));
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  };
+
+  const handleAuth = async () => {
+    if (!validateForm()) return;
 
     setLoading(true);
     try {
@@ -45,16 +72,28 @@ const LoginScreen = () => {
         <Input 
           placeholder="Email" 
           value={email} 
-          onChangeText={setEmail}
+          onChangeText={(text) => {
+            setEmail(text);
+            setEmailError('');
+          }}
           autoCapitalize="none"
+          keyboardType="email-address"
+          error={emailError}
         />
         <View style={{ height: Theme.spacing.md }} />
         <Input 
           placeholder="Contraseña" 
           value={password} 
-          onChangeText={setPassword}
+          onChangeText={(text) => {
+            setPassword(text);
+            setPasswordError('');
+          }}
           secureTextEntry={true}
+          error={passwordError}
         />
+        {isRegister && password.length > 0 && password.length < 8 && (
+          <Text style={styles.hint}>Mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número</Text>
+        )}
 
         <View style={{ height: Theme.spacing.lg }} />
         
@@ -105,6 +144,13 @@ const styles = StyleSheet.create({
     color: Theme.colors.gray,
     textAlign: 'center',
     marginBottom: Theme.spacing.xl,
+  },
+  hint: {
+    fontSize: 12,
+    fontFamily: Theme.fonts.body,
+    color: Theme.colors.gray,
+    marginTop: Theme.spacing.xs,
+    textAlign: 'center',
   },
 });
 
