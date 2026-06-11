@@ -36,9 +36,18 @@ const FriendsScreen = ({ navigation }: any) => {
       Alert.alert('Error', 'Ingresa un nombre');
       return;
     }
+    if (!newEmail.trim()) {
+      Alert.alert('Error', 'Ingresa un email');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newEmail.trim())) {
+      Alert.alert('Error', 'Ingresa un email válido');
+      return;
+    }
     setAdding(true);
     try {
-      await apiClient.post('/friends', { name: newName.trim(), email: newEmail.trim() || undefined });
+      await apiClient.post('/friends', { name: newName.trim(), email: newEmail.trim() });
       setNewName('');
       setNewEmail('');
       setShowAdd(false);
@@ -111,7 +120,7 @@ const FriendsScreen = ({ navigation }: any) => {
           />
           <TextInput
             style={styles.input}
-            placeholder="Email (opcional)"
+            placeholder="Email"
             value={newEmail}
             onChangeText={setNewEmail}
             keyboardType="email-address"

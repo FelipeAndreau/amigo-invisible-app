@@ -11,8 +11,8 @@ import (
 type Message struct {
 	ID        string    `json:"id"`
 	EventID   string    `json:"event_id"`
-	UserID    string    `json:"user_id"`
 	Content   string    `json:"content"`
+	IsMine    bool      `json:"is_mine"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
@@ -48,7 +48,9 @@ func ListMessagesHandler(c *gin.Context) {
 	messages := []Message{}
 	for rows.Next() {
 		var m Message
-		rows.Scan(&m.ID, &m.EventID, &m.UserID, &m.Content, &m.CreatedAt)
+		var msgUserID string
+		rows.Scan(&m.ID, &m.EventID, &msgUserID, &m.Content, &m.CreatedAt)
+		m.IsMine = msgUserID == userID.(string)
 		messages = append(messages, m)
 	}
 

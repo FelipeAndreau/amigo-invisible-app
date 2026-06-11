@@ -77,10 +77,18 @@ const EventDetailScreen = ({ route, navigation }: any) => {
 
   const handleShare = async (p: any) => {
     if (!p.access_token) return;
+    let inviteCode = '';
+    try {
+      const inviteData = await apiClient.post(`/events/${eventId}/invite`, {});
+      inviteCode = inviteData.invite_code || '';
+    } catch (e) {
+      console.error('Failed to get invite code:', e);
+    }
     const url = `http://192.168.100.94:8080/r/${p.access_token}`;
+    const inviteText = inviteCode ? `📱 Si tenés la app, unite con este código: *${inviteCode}*\n` : '';
     try {
       await Share.share({
-        message: `🎁 *¡Llegó el Amigo Invisible!* 🎁\n\nHola *${p.name}*, ya puedes descubrir a quién te toca hacerle un regalo.\n\n🤫 Haz clic aquí para ver tu resultado:\n${url}\n\n_Recuerda no decírselo a nadie..._`,
+        message: `🎁 *¡Llegó el Amigo Invisible!* 🎁\n\nHola *${p.name}*, te invitaron al sorteo "*${eventName}*".\n\n${inviteText}🌐 O abrí este link para ver tu resultado:\n${url}\n\n¡No se lo digas a nadie! 🤫`,
       });
     } catch (error) {
       console.error(error);

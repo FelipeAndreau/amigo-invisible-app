@@ -1,29 +1,62 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { Theme } from '../../shared/theme';
-import { ChevronLeft } from 'lucide-react-native';
-import { TouchableOpacity } from 'react-native';
-
-const MOCK_MESSAGES = [
-  { id: '1', sender: 'María', text: '¿Ya saben qué regalar?', time: '10:30', isMe: false },
-  { id: '2', sender: 'Carlos', text: 'Yo ya tengo una idea 🎁', time: '10:32', isMe: false },
-  { id: '3', sender: 'Tú', text: '¡No hagan trampa!', time: '10:35', isMe: true },
-  { id: '4', sender: 'Pilar', text: 'Alguien quiere intercambiar?', time: '10:40', isMe: false },
-];
+import { apiClient } from '../../shared/utils/api';
+import { ChevronLeft, Send } from 'lucide-react-native';
 
 const ChatScreen = ({ route, navigation }: any) => {
-  const { eventName } = route.params;
+  const { eventId, eventName } = route.params;
+  const [messages, setMessages] = useState<any[]>([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  const fetchMessages = useCallback(async () => {
+    try {
+      const data = await apiClient.get(`/events/${eventId}/messages`);
+      // Reverse to show newest at bottom
+      setMessages(data.reverse());
+    } catch (e) {
+      console.error('Fetch messages error:', e);
+    } finally {
+      setLoading(false);
+    }
+  }, [eventId]);
+
+  useEffect(() => {
+    fetchMessages();
+    // Polling every 3 seconds
+    const interval = setInterval(fetchMessages, 3000);
+    return () => clearInterval(interval);
+  }, [fetchMessages]);
+
+  const handleSend = async () => {
+    if (!newMessage.trim()) return;
+    const text = newMessage.trim();
+    setNewMessage('');
+    try {
+      await apiClient.post(`/events/${eventId}/messages`, { content: text });
+      fetchMessages();
+    } catch (e: any) {
+      console.error('Send message error:', e);
+    }
+  };
 
   const renderMessage = ({ item }: any) => (
-    <View style={[styles.messageBubble, item.isMe ? styles.myBubble : styles.otherBubble]}>
-      {!item.isMe && <Text style={styles.senderName}>{item.sender}</Text>}
-      <Text style={styles.messageText}>{item.text}</Text>
-      <Text style={styles.timeText}>{item.time}</Text>
+    <View style={[styles.messageBubble, item.is_mine ? styles.myBubble : styles.otherBubble]}>
+      {item.is_mine && <Text style={styles.senderLabel}>Tú</Text>}
+      <Text style={styles.messageText}>{item.content}</Text>
+      <Text style={styles.timeText}>
+        {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      </Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+    >
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
           <ChevronLeft size={24} color={Theme.colors.text} />
@@ -32,21 +65,27 @@ const ChatScreen = ({ route, navigation }: any) => {
       </View>
 
       <FlatList
-        data={MOCK_MESSAGES}
+        data={messages}
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.messagesList}
+        inverted={false}
       />
 
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Chat disponible próximamente..."
+          placeholder="Escribe un mensaje..."
           placeholderTextColor={Theme.colors.gray}
-          editable={false}
+          value={newMessage}
+          onChangeText={setNewMessage}
+          multiline
         />
+        <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
+          <Send size={20} color={Theme.colors.white} />
+        </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -88,11 +127,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     backgroundColor: Theme.colors.white,
   },
-  senderName: {
+  senderLabel: {
     fontFamily: Theme.fonts.body,
-    fontSize: 12,
-    color: Theme.colors.gray,
+    fontSize: 10,
+    color: Theme.colors.white,
     marginBottom: 4,
+    opacity: 0.8,
   },
   messageText: {
     fontFamily: Theme.fonts.body,
@@ -107,6 +147,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: Theme.spacing.lg,
     paddingVertical: Theme.spacing.md,
     backgroundColor: Theme.colors.white,
@@ -114,13 +156,21 @@ const styles = StyleSheet.create({
     borderTopColor: '#E5E7EB',
   },
   input: {
+    flex: 1,
     backgroundColor: '#F3F4F6',
     borderRadius: Theme.radius.full,
     paddingHorizontal: Theme.spacing.md,
     paddingVertical: Theme.spacing.sm,
     fontFamily: Theme.fonts.body,
     fontSize: 14,
-    color: Theme.colors.gray,
+    color: Theme.colors.text,
+    maxHeight: 100,
+  },
+  sendButton: {
+    backgroundColor: Theme.colors.cta,
+    borderRadius: Theme.radius.full,
+    padding: Theme.spacing.sm,
+    marginLeft: Theme.spacing.sm,
   },
 });
 
