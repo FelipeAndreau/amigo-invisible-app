@@ -6,7 +6,7 @@ import { Theme } from '../../../shared/theme';
 interface Participant {
   id: string;
   name: string;
-  access_token?: string;
+  is_me?: boolean;
 }
 
 interface Props {
@@ -31,8 +31,8 @@ export const ParticipantList = ({
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
       <UserPlus color={Theme.colors.secondary} size={48} strokeWidth={1.5} />
-      <Text style={styles.emptyText}>Aún no hay amigos en la lista</Text>
-      <Text style={styles.emptySubtext}>¡Empieza agregando algunos!</Text>
+      <Text style={styles.emptyText}>Aún no hay participantes en la lista</Text>
+      <Text style={styles.emptySubtext}>¡Comparte el código de invitación!</Text>
     </View>
   );
 
@@ -55,10 +55,12 @@ export const ParticipantList = ({
             disabled={!onPress}
             activeOpacity={0.7}
           >
-            <View style={styles.dot} />
-            <Text style={styles.itemText}>{item.name}</Text>
+            <View style={[styles.dot, item.is_me && styles.meDot]} />
+            <Text style={styles.itemText}>
+              {item.name} {item.is_me && <Text style={styles.meLabel}>(Vos)</Text>}
+            </Text>
             
-            {showShareIcon && item.access_token && (
+            {showShareIcon && (
               <Share2 size={18} color={Theme.colors.cta} />
             )}
 
@@ -101,11 +103,19 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.secondary,
     marginRight: 12,
   },
+  meDot: {
+    backgroundColor: Theme.colors.cta,
+  },
   itemText: {
     fontFamily: 'Nunito-Bold',
     fontSize: 16,
     color: Theme.colors.text,
     flex: 1,
+  },
+  meLabel: {
+    fontFamily: 'Nunito-Regular',
+    fontSize: 12,
+    color: Theme.colors.cta,
   },
   deleteAction: {
     padding: 4,

@@ -13,7 +13,6 @@ import LoginScreen from './src/features/auth/LoginScreen';
 import DashboardScreen from './src/features/event/DashboardScreen';
 import CreateEventScreen from './src/features/event/CreateEventScreen';
 import EventDetailScreen from './src/features/event/EventDetailScreen';
-import RevealPublicScreen from './src/features/event/RevealPublicScreen';
 import JoinEventScreen from './src/features/event/JoinEventScreen';
 import ChatScreen from './src/features/chat/ChatScreen';
 import FriendsScreen from './src/features/friends/FriendsScreen';
@@ -50,7 +49,6 @@ const RootNavigator = () => {
           <Stack.Screen name="Friends" component={FriendsScreen} />
         </>
       )}
-      <Stack.Screen name="RevealPublic" component={RevealPublicScreen} />
     </Stack.Navigator>
   );
 };

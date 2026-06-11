@@ -15,9 +15,6 @@ func main() {
 
 	r := gin.Default()
 
-	// Cargar plantillas HTML
-	r.LoadHTMLGlob("web/templates/*.html")
-
 	// CORS Middleware
 	// IMPORTANTE: Allow-Origin: * + Allow-Credentials es inválido por la spec.
 	// En producción, reemplazar * por el dominio exacto del frontend.
@@ -54,9 +51,6 @@ func main() {
 			authGroup.POST("/login", auth.LoginHandler)
 		}
 
-		api.GET("/reveal/:token", event.RevealAPIHandler)
-		r.GET("/r/:token", event.RevealHandler) // Ruta corta: /r/TOKEN (HTML fallback)
-
 		// Rutas protegidas
 		protected := api.Group("/")
 		protected.Use(auth.AuthMiddleware())
@@ -64,12 +58,10 @@ func main() {
 			protected.GET("/events", event.ListEventsHandler)
 			protected.POST("/events", event.CreateEventHandler)
 			protected.DELETE("/events/:id", event.DeleteEventHandler)
-			protected.GET("/events/:id/participants", event.ListEventParticipantsHandler)
-			protected.POST("/events/:id/participants", event.AddParticipantHandler)
-			protected.POST("/events/:id/shuffle", event.ShuffleEventHandler)
-			protected.DELETE("/events/:id/participants/:participant_id", event.DeleteParticipantHandler)
-			protected.POST("/events/:id/invite", event.GenerateInviteHandler)
-			protected.GET("/events/participating", event.ListParticipantEventsHandler)
+		protected.GET("/events/:id/participants", event.ListEventParticipantsHandler)
+		protected.POST("/events/:id/shuffle", event.ShuffleEventHandler)
+		protected.DELETE("/events/:id/participants/:participant_id", event.DeleteParticipantHandler)
+		protected.GET("/events/participating", event.ListParticipantEventsHandler)
 			protected.GET("/events/:id/my-assignment", event.GetMyAssignmentHandler)
 			protected.POST("/events/join", event.JoinEventHandler)
 			protected.GET("/friends", friends.ListFriendsHandler)

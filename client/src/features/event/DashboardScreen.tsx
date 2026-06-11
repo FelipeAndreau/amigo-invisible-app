@@ -83,9 +83,9 @@ const DashboardScreen = ({ navigation }: any) => {
       </View>
 
       <View style={styles.cardFooter}>
-        <View style={[styles.badge, { backgroundColor: item.status === 'shuffled' ? '#DEF7EC' : '#FEE2E2' }]}>
-          <Text style={[styles.badgeText, { color: item.status === 'shuffled' ? '#03543F' : '#991B1B' }]}>
-            {item.status === 'shuffled' ? 'Sorteado' : 'Borrador'}
+        <View style={[styles.badge, { backgroundColor: item.status === 'shuffled' ? '#DEF7EC' : '#DBEAFE' }]}>
+          <Text style={[styles.badgeText, { color: item.status === 'shuffled' ? '#03543F' : '#1E40AF' }]}>
+            {item.status === 'shuffled' ? 'Sorteado' : item.status === 'open' ? 'Abierto' : 'Borrador'}
           </Text>
         </View>
         <View style={styles.footerItem}>

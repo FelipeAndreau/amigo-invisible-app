@@ -23,9 +23,15 @@ const JoinEventScreen = ({ navigation }: any) => {
 
     setLoading(true);
     try {
-      await apiClient.post('/events/join', { code: code.trim(), name: name.trim() });
+      const response = await apiClient.post('/events/join', { code: code.trim(), name: name.trim() });
       Alert.alert('¡Éxito!', 'Te uniste al sorteo correctamente', [
-        { text: 'OK', onPress: () => navigation.navigate('Dashboard') }
+        { text: 'Ver sorteo', onPress: () => navigation.navigate('EventDetail', {
+          eventId: response.event_id,
+          eventName: '',
+          status: 'open',
+          role: 'participant'
+        })},
+        { text: 'Dashboard', onPress: () => navigation.navigate('Dashboard') }
       ]);
     } catch (e: any) {
       Alert.alert('Error', e.message || 'No se pudo unir al sorteo');

@@ -22,6 +22,6 @@ type Participant struct {
 }
 
 type CreateEventRequest struct {
-	Name         string   `json:"name" binding:"required"`
-	Participants []string `json:"participants" binding:"required,min=3"`
+	Name              string `json:"name" binding:"required"`
+	OrganizerDisplayName string `json:"organizer_display_name" binding:"required"`
 }

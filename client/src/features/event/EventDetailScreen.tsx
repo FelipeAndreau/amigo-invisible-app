@@ -4,16 +4,16 @@ import { Theme } from '../../shared/theme';
 import { apiClient } from '../../shared/utils/api';
 import { Button } from '../../shared/components/Button';
 import { ParticipantList } from './components/ParticipantList';
-import { ParticipantInput } from './components/ParticipantInput';
-import { ChevronLeft, Play, MessageCircle } from 'lucide-react-native';
+import { ChevronLeft, Play, MessageCircle, Copy, Share2 } from 'lucide-react-native';
 
 const EventDetailScreen = ({ route, navigation }: any) => {
-  const { eventId, eventName, status: initialStatus, role = 'organizer' } = route.params;
+  const { eventId, eventName, status: initialStatus, role = 'organizer', inviteCode: initialCode } = route.params;
   const [participants, setParticipants] = useState<any[]>([]);
   const [status, setStatus] = useState(initialStatus);
   const [loading, setLoading] = useState(true);
   const [shuffling, setShuffling] = useState(false);
   const [myAssignment, setMyAssignment] = useState<any>(null);
+  const [inviteCode, setInviteCode] = useState(initialCode || '');
   const isOrganizer = role === 'organizer';
 
   const fetchData = async () => {
@@ -29,7 +29,7 @@ const EventDetailScreen = ({ route, navigation }: any) => {
   };
 
   const fetchMyAssignment = async () => {
-    if (!isOrganizer && status === 'shuffled') {
+    if (status === 'shuffled') {
       try {
         const data = await apiClient.get(`/events/${eventId}/my-assignment`);
         setMyAssignment(data);
@@ -63,7 +63,8 @@ const EventDetailScreen = ({ route, navigation }: any) => {
               await apiClient.post(`/events/${eventId}/shuffle`, {});
               setStatus('shuffled');
               await fetchData();
-              Alert.alert('¡Éxito!', 'Sorteo realizado. Ahora puedes compartir los links.');
+              await fetchMyAssignment();
+              Alert.alert('¡Éxito!', 'Sorteo realizado. Cada participante puede ver su asignación en la app.');
             } catch (e: any) {
               Alert.alert('Error', e.message);
             } finally {
@@ -75,20 +76,11 @@ const EventDetailScreen = ({ route, navigation }: any) => {
     );
   };
 
-  const handleShare = async (p: any) => {
-    if (!p.access_token) return;
-    let inviteCode = '';
-    try {
-      const inviteData = await apiClient.post(`/events/${eventId}/invite`, {});
-      inviteCode = inviteData.invite_code || '';
-    } catch (e) {
-      console.error('Failed to get invite code:', e);
-    }
-    const url = `http://192.168.100.94:8080/r/${p.access_token}`;
-    const inviteText = inviteCode ? `📱 Si tenés la app, unite con este código: *${inviteCode}*\n` : '';
+  const handleShareCode = async () => {
+    if (!inviteCode) return;
     try {
       await Share.share({
-        message: `🎁 *¡Llegó el Amigo Invisible!* 🎁\n\nHola *${p.name}*, te invitaron al sorteo "*${eventName}*".\n\n${inviteText}🌐 O abrí este link para ver tu resultado:\n${url}\n\n¡No se lo digas a nadie! 🤫`,
+        message: `🎁 *¡Te invito a un Amigo Invisible!* 🎁\n\nSorteo: *${eventName}*\n\n📱 Código de invitación: *${inviteCode}*\n\nUnite descargando la app Amigo Invisible e ingresando este código.`,
       });
     } catch (error) {
       console.error(error);
@@ -117,15 +109,6 @@ const EventDetailScreen = ({ route, navigation }: any) => {
     );
   };
 
-  const handleAddParticipant = async (name: string) => {
-    try {
-      await apiClient.post(`/events/${eventId}/participants`, { name });
-      fetchData();
-    } catch (e: any) {
-      Alert.alert('Error', e.message);
-    }
-  };
-
   if (loading) {
     return (
       <View style={styles.container}>
@@ -143,7 +126,7 @@ const EventDetailScreen = ({ route, navigation }: any) => {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{eventName}</Text>
           <Text style={styles.subtitle}>
-            {status === 'shuffled' ? 'Sorteo Finalizado' : 'Borrador'}
+            {status === 'shuffled' ? 'Sorteo Finalizado' : 'Abierto - Recibiendo participantes'}
           </Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('Chat', { eventId, eventName })} style={styles.chatBtn}>
@@ -151,14 +134,34 @@ const EventDetailScreen = ({ route, navigation }: any) => {
         </TouchableOpacity>
       </View>
 
-      {!isOrganizer && status === 'shuffled' && myAssignment && (
+      {/* Asignación para participantes */}
+      {status === 'shuffled' && myAssignment && (
         <View style={styles.assignmentCard}>
           <Text style={styles.assignmentLabel}>¡Tu amigo invisible es:</Text>
           <Text style={styles.assignmentName}>{myAssignment.assigned_name || '...'}</Text>
         </View>
       )}
 
-      {!isOrganizer && status === 'draft' && (
+      {status === 'shuffled' && !myAssignment && !isOrganizer && (
+        <View style={styles.waitingCard}>
+          <Text style={styles.waitingText}>No se encontró tu asignación. ¿Ya te uniste a este sorteo?</Text>
+        </View>
+      )}
+
+      {/* Código de invitación para organizador */}
+      {isOrganizer && status !== 'shuffled' && inviteCode && (
+        <View style={styles.inviteCard}>
+          <Text style={styles.inviteLabel}>Código de invitación</Text>
+          <Text style={styles.inviteCode}>{inviteCode}</Text>
+          <TouchableOpacity onPress={handleShareCode} style={styles.shareBtn}>
+            <Share2 size={18} color={Theme.colors.white} />
+            <Text style={styles.shareBtnText}>Compartir código</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Esperando para participantes */}
+      {!isOrganizer && status !== 'shuffled' && (
         <View style={styles.waitingCard}>
           <Text style={styles.waitingText}>Esperando a que el organizador realice el sorteo...</Text>
         </View>
@@ -166,25 +169,17 @@ const EventDetailScreen = ({ route, navigation }: any) => {
 
       <ParticipantList
         participants={participants}
-        onPress={(p) => isOrganizer && status === 'shuffled' && handleShare(p)}
-        onDelete={isOrganizer ? handleDeleteParticipant : undefined}
-        showShareIcon={isOrganizer && status === 'shuffled'}
-        showDeleteIcon={isOrganizer && status === 'draft'}
+        onDelete={isOrganizer && status !== 'shuffled' ? handleDeleteParticipant : undefined}
         ListHeaderComponent={
           <View style={styles.listHeader}>
             <Text style={styles.label}>Participantes ({participants.length})</Text>
-            {isOrganizer && status === 'draft' && (
-              <View style={styles.inputWrapper}>
-                <ParticipantInput onAdd={handleAddParticipant} />
-              </View>
-            )}
           </View>
         }
         ListFooterComponent={
           <View style={styles.footer}>
             {isOrganizer && (
               status === 'shuffled' ? (
-                <Text style={styles.infoText}>Pulsa en cada participante para compartir su link de revelación.</Text>
+                <Text style={styles.infoText}>Sorteo finalizado. Cada participante ve su asignación en la app.</Text>
               ) : (
                 <Button
                   title="Realizar Sorteo"
@@ -239,9 +234,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: Theme.spacing.sm,
   },
-  inputWrapper: {
-    marginTop: Theme.spacing.sm,
-  },
   footer: {
     paddingHorizontal: Theme.spacing.lg,
     paddingVertical: 20,
@@ -287,6 +279,42 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fonts.body,
     fontSize: 14,
     color: '#92400E',
+  },
+  inviteCard: {
+    backgroundColor: Theme.colors.primary,
+    borderRadius: Theme.radius.md,
+    padding: Theme.spacing.md,
+    marginHorizontal: Theme.spacing.lg,
+    marginBottom: Theme.spacing.md,
+    alignItems: 'center',
+  },
+  inviteLabel: {
+    fontFamily: Theme.fonts.body,
+    fontSize: 14,
+    color: Theme.colors.white,
+    marginBottom: Theme.spacing.sm,
+    opacity: 0.9,
+  },
+  inviteCode: {
+    fontFamily: Theme.fonts.heading,
+    fontSize: 32,
+    color: Theme.colors.white,
+    letterSpacing: 4,
+    marginBottom: Theme.spacing.md,
+  },
+  shareBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: Theme.radius.md,
+    paddingHorizontal: Theme.spacing.md,
+    paddingVertical: Theme.spacing.sm,
+  },
+  shareBtnText: {
+    fontFamily: Theme.fonts.heading,
+    fontSize: 14,
+    color: Theme.colors.white,
+    marginLeft: Theme.spacing.sm,
   },
 });
 

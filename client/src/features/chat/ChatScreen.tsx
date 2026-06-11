@@ -43,7 +43,9 @@ const ChatScreen = ({ route, navigation }: any) => {
 
   const renderMessage = ({ item }: any) => (
     <View style={[styles.messageBubble, item.is_mine ? styles.myBubble : styles.otherBubble]}>
-      {item.is_mine && <Text style={styles.senderLabel}>Tú</Text>}
+      <Text style={[styles.senderLabel, item.is_mine ? styles.mySenderLabel : styles.otherSenderLabel]}>
+        {item.is_mine ? 'Tú' : 'Anónimo'}
+      </Text>
       <Text style={styles.messageText}>{item.content}</Text>
       <Text style={styles.timeText}>
         {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -130,9 +132,14 @@ const styles = StyleSheet.create({
   senderLabel: {
     fontFamily: Theme.fonts.body,
     fontSize: 10,
-    color: Theme.colors.white,
     marginBottom: 4,
     opacity: 0.8,
+  },
+  mySenderLabel: {
+    color: Theme.colors.white,
+  },
+  otherSenderLabel: {
+    color: Theme.colors.gray,
   },
   messageText: {
     fontFamily: Theme.fonts.body,
