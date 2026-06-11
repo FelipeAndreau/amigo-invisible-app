@@ -6,6 +6,8 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 )
 
 var DB *sql.DB
@@ -34,4 +36,28 @@ func InitDB() {
 	}
 
 	log.Println("Successfully connected to the database")
+
+	// Auto-migration: ejecutar schema.sql si existe
+	if err := runMigrations(); err != nil {
+		log.Printf("Warning: failed to run migrations: %v", err)
+	}
+}
+
+func runMigrations() error {
+	_, b, _, _ := runtime.Caller(0)
+	basePath := filepath.Dir(b)
+	schemaPath := filepath.Join(basePath, "schema.sql")
+
+	schemaSQL, err := os.ReadFile(schemaPath)
+	if err != nil {
+		return fmt.Errorf("could not read schema.sql: %w", err)
+	}
+
+	_, err = DB.Exec(string(schemaSQL))
+	if err != nil {
+		return fmt.Errorf("could not execute schema.sql: %w", err)
+	}
+
+	log.Println("Database schema initialized successfully")
+	return nil
 }

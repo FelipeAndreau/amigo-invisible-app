@@ -1,12 +1,11 @@
+version: "3.8"
+
 services:
   backend:
     build:
       context: ./server
       dockerfile: Dockerfile.dev
-      network: host
     container_name: amigo-invisible-api
-    dns:
-      - 8.8.8.8
     ports:
       - "8080:8080"
     volumes:
@@ -18,6 +17,11 @@ services:
       - DB_USER=felipe
       - DB_PASSWORD=secret
       - DB_NAME=amigo_invisible
+      - JWT_SECRET=change-this-in-production-min-32-chars
+      - GIN_MODE=release
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - amigo-invisible-net
 
@@ -25,10 +29,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.dev
-      network: host
     container_name: amigo-invisible-mobile
-    dns:
-      - 8.8.8.8
     ports:
       - "8081:8081"
     volumes:
@@ -50,6 +51,13 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./server/internal/platform/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U felipe -d amigo_invisible"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - amigo-invisible-net
 
