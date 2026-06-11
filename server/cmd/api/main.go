@@ -61,7 +61,11 @@ func main() {
 			protected.POST("/events/:id/participants", event.AddParticipantHandler)
 			protected.POST("/events/:id/shuffle", event.ShuffleEventHandler)
 			protected.DELETE("/events/:id/participants/:participant_id", event.DeleteParticipantHandler)
+			protected.POST("/events/:id/invite", event.GenerateInviteHandler)
 		}
+
+		// Ruta pública para unirse a eventos
+		api.POST("/events/join", event.JoinEventHandler)
 	}
 
 	r.Run("0.0.0.0:8080")

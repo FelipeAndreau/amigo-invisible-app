@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS events (
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     status TEXT DEFAULT 'draft',
+    invite_code TEXT UNIQUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

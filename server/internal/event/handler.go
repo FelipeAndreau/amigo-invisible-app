@@ -160,3 +160,72 @@ func RevealHandler(c *gin.Context) {
 		"AssignedName": assignedName,
 	})
 }
+
+func GenerateInviteHandler(c *gin.Context) {
+	userID, _ := c.Get("userID")
+	eventID := c.Param("id")
+
+	var exists bool
+	err := db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM events WHERE id = $1 AND user_id = $2)", eventID, userID).Scan(&exists)
+	if err != nil || !exists {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Event not found or unauthorized"})
+		return
+	}
+
+	code := GenerateMagicToken()[:8]
+	_, err = db.DB.Exec("UPDATE events SET invite_code = $1 WHERE id = $2", code, eventID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate invite code"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"invite_code": code})
+}
+
+type JoinEventRequest struct {
+	Code string `json:"code" binding:"required"`
+	Name string `json:"name" binding:"required"`
+}
+
+func JoinEventHandler(c *gin.Context) {
+	var req JoinEventRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var eventID string
+	var status string
+	err := db.DB.QueryRow("SELECT id, status FROM events WHERE invite_code = $1", req.Code).Scan(&eventID, &status)
+	if err == sql.ErrNoRows {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Invalid invite code"})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+		return
+	}
+
+	if status == "shuffled" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Event already shuffled, cannot join"})
+		return
+	}
+
+	var exists bool
+	err = db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM participants WHERE event_id = $1 AND name = $2)", eventID, req.Name).Scan(&exists)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+		return
+	}
+	if exists {
+		c.JSON(http.StatusConflict, gin.H{"error": "Participant name already exists in this event"})
+		return
+	}
+
+	_, err = db.DB.Exec("INSERT INTO participants (event_id, name) VALUES ($1, $2)", eventID, req.Name)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to join event"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Joined event successfully", "event_id": eventID})
+}
