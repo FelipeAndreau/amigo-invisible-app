@@ -3,17 +3,22 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, 
 import { Theme } from '../../shared/theme';
 import { apiClient } from '../../shared/utils/api';
 import { useAuth } from '../../shared/hooks/useAuth';
-import { LogOut, Plus, Users, Calendar, Trash2 } from 'lucide-react-native';
+import { LogOut, Plus, Users, Calendar, Trash2, Link2, MessageCircle } from 'lucide-react-native';
 
 const DashboardScreen = ({ navigation }: any) => {
   const [events, setEvents] = useState<any[]>([]);
+  const [participatingEvents, setParticipatingEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { logout } = useAuth();
 
   const fetchEvents = async () => {
     try {
-      const data = await apiClient.get('/events');
-      setEvents(data);
+      const [organized, participating] = await Promise.all([
+        apiClient.get('/events'),
+        apiClient.get('/events/participating').catch(() => []),
+      ]);
+      setEvents(organized || []);
+      setParticipatingEvents(participating || []);
     } catch (e) {
       console.error('Fetch error:', e);
     } finally {
@@ -50,25 +55,33 @@ const DashboardScreen = ({ navigation }: any) => {
     );
   };
 
-  const renderItem = ({ item }: { item: any }) => (
-    <TouchableOpacity 
+  const renderEventCard = ({ item, isOrganizer }: { item: any; isOrganizer: boolean }) => (
+    <TouchableOpacity
       style={styles.eventCard}
-      onPress={() => navigation.navigate('EventDetail', { 
-        eventId: item.id, 
-        eventName: item.name, 
-        status: item.status 
+      onPress={() => navigation.navigate('EventDetail', {
+        eventId: item.id,
+        eventName: item.name,
+        status: item.status,
+        role: isOrganizer ? 'organizer' : 'participant'
       })}
     >
       <View style={styles.cardHeader}>
         <Text style={styles.eventName}>{item.name}</Text>
-        <TouchableOpacity 
-          onPress={() => handleDeleteEvent(item.id, item.name)}
-          style={styles.deleteBtn}
-        >
-          <Trash2 size={18} color={Theme.colors.error} />
-        </TouchableOpacity>
+        {isOrganizer && (
+          <TouchableOpacity
+            onPress={() => handleDeleteEvent(item.id, item.name)}
+            style={styles.deleteBtn}
+          >
+            <Trash2 size={18} color={Theme.colors.error} />
+          </TouchableOpacity>
+        )}
+        {!isOrganizer && (
+          <View style={[styles.roleBadge, { backgroundColor: '#DBEAFE' }]}>
+            <Text style={[styles.roleBadgeText, { color: '#1E40AF' }]}>Participante</Text>
+          </View>
+        )}
       </View>
-      
+
       <View style={styles.cardFooter}>
         <View style={[styles.badge, { backgroundColor: item.status === 'shuffled' ? '#DEF7EC' : '#FEE2E2' }]}>
           <Text style={[styles.badgeText, { color: item.status === 'shuffled' ? '#03543F' : '#991B1B' }]}>
@@ -89,28 +102,63 @@ const DashboardScreen = ({ navigation }: any) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Mis Sorteos</Text>
-        <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
-          <LogOut size={24} color={Theme.colors.primary} />
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={() => navigation.navigate('JoinEvent')} style={styles.headerBtn}>
+            <Link2 size={24} color={Theme.colors.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Friends')} style={styles.headerBtn}>
+            <Users size={24} color={Theme.colors.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={logout} style={styles.headerBtn}>
+            <LogOut size={24} color={Theme.colors.primary} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {loading ? (
         <ActivityIndicator size="large" color={Theme.colors.primary} style={{ marginTop: 50 }} />
       ) : (
         <FlatList
-          data={events}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          data={[]}
+          renderItem={() => null}
+          keyExtractor={() => 'root'}
           contentContainerStyle={styles.list}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>Aún no tienes sorteos activos.</Text>
+          ListHeaderComponent={
+            <View>
+              {events.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Organizador</Text>
+                  {events.map((item) => (
+                    <View key={item.id} style={styles.cardWrapper}>
+                      {renderEventCard({ item, isOrganizer: true })}
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              {participatingEvents.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Participando</Text>
+                  {participatingEvents.map((item) => (
+                    <View key={item.id} style={styles.cardWrapper}>
+                      {renderEventCard({ item, isOrganizer: false })}
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              {events.length === 0 && participatingEvents.length === 0 && (
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyText}>Aún no tienes sorteos activos.</Text>
+                  <Text style={styles.emptySubtext}>Crea uno nuevo o únete con un código de invitación.</Text>
+                </View>
+              )}
             </View>
           }
         />
       )}
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.fab}
         onPress={() => navigation.navigate('CreateEvent')}
       >
@@ -138,8 +186,42 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fonts.heading,
     color: Theme.colors.text,
   },
-  logoutBtn: {
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Theme.spacing.sm,
+  },
+  headerBtn: {
     padding: Theme.spacing.sm,
+  },
+  section: {
+    marginBottom: Theme.spacing.lg,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontFamily: Theme.fonts.heading,
+    color: Theme.colors.text,
+    marginBottom: Theme.spacing.md,
+  },
+  cardWrapper: {
+    marginBottom: Theme.spacing.md,
+  },
+  roleBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: Theme.radius.full,
+  },
+  roleBadgeText: {
+    fontSize: 10,
+    fontFamily: Theme.fonts.body,
+    fontWeight: '700',
+  },
+  emptySubtext: {
+    fontFamily: Theme.fonts.body,
+    color: Theme.colors.gray,
+    fontSize: 14,
+    marginTop: Theme.spacing.sm,
+    textAlign: 'center',
   },
   list: {
     paddingHorizontal: Theme.spacing.lg,

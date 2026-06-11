@@ -1,4 +1,5 @@
-import { Theme } from '../shared/theme';
+// Legacy E1 shuffle logic - no longer used (backend handles shuffle now)
+// Kept for reference only
 
 export interface Participant {
   id: string;

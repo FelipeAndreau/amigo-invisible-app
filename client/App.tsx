@@ -14,6 +14,9 @@ import DashboardScreen from './src/features/event/DashboardScreen';
 import CreateEventScreen from './src/features/event/CreateEventScreen';
 import EventDetailScreen from './src/features/event/EventDetailScreen';
 import RevealPublicScreen from './src/features/event/RevealPublicScreen';
+import JoinEventScreen from './src/features/event/JoinEventScreen';
+import ChatScreen from './src/features/chat/ChatScreen';
+import FriendsScreen from './src/features/friends/FriendsScreen';
 
 const Stack = createStackNavigator();
 
@@ -42,6 +45,9 @@ const RootNavigator = () => {
           <Stack.Screen name="Dashboard" component={DashboardScreen} />
           <Stack.Screen name="CreateEvent" component={CreateEventScreen} />
           <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+          <Stack.Screen name="JoinEvent" component={JoinEventScreen} />
+          <Stack.Screen name="Chat" component={ChatScreen} />
+          <Stack.Screen name="Friends" component={FriendsScreen} />
         </>
       )}
       <Stack.Screen name="RevealPublic" component={RevealPublicScreen} />

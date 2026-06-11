@@ -12,12 +12,13 @@ type Event struct {
 }
 
 type Participant struct {
-	ID          string `json:"id"`
-	EventID     string `json:"event_id"`
-	Name        string `json:"name"`
-	Email       string `json:"email,omitempty"`
-	AssignedTo  string `json:"assigned_to,omitempty"`
-	AccessToken string `json:"access_token,omitempty"`
+	ID          string  `json:"id"`
+	EventID     string  `json:"event_id"`
+	Name        string  `json:"name"`
+	Email       string  `json:"email,omitempty"`
+	UserID      *string `json:"user_id,omitempty"`
+	AssignedTo  string  `json:"assigned_to,omitempty"`
+	AccessToken string  `json:"access_token,omitempty"`
 }
 
 type CreateEventRequest struct {

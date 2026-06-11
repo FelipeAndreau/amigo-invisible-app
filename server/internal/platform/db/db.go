@@ -58,6 +58,30 @@ func runMigrations() error {
 		return fmt.Errorf("could not execute schema.sql: %w", err)
 	}
 
+	// Ejecutar migraciones adicionales
+	migrationsDir := filepath.Join(basePath, "migrations")
+	entries, err := os.ReadDir(migrationsDir)
+	if err != nil {
+		log.Printf("No migrations directory found, skipping: %v", err)
+	} else {
+		for _, entry := range entries {
+			if !entry.IsDir() && filepath.Ext(entry.Name()) == ".sql" {
+				migrationPath := filepath.Join(migrationsDir, entry.Name())
+				migrationSQL, err := os.ReadFile(migrationPath)
+				if err != nil {
+					log.Printf("Warning: could not read migration %s: %v", entry.Name(), err)
+					continue
+				}
+				_, err = DB.Exec(string(migrationSQL))
+				if err != nil {
+					log.Printf("Warning: failed to execute migration %s: %v", entry.Name(), err)
+					continue
+				}
+				log.Printf("Migration executed: %s", entry.Name())
+			}
+		}
+	}
+
 	log.Println("Database schema initialized successfully")
 	return nil
 }

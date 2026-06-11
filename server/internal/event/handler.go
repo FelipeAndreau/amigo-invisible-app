@@ -187,6 +187,97 @@ type JoinEventRequest struct {
 	Name string `json:"name" binding:"required"`
 }
 
+func ListParticipantEventsHandler(c *gin.Context) {
+	userID, _ := c.Get("userID")
+	rows, err := db.DB.Query(`
+		SELECT DISTINCT e.id, e.name, e.status, e.created_at
+		FROM events e
+		INNER JOIN participants p ON p.event_id = e.id
+		WHERE p.user_id = $1
+		ORDER BY e.created_at DESC
+	`, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query participant events"})
+		return
+	}
+	defer rows.Close()
+
+	events := []Event{}
+	for rows.Next() {
+		var e Event
+		rows.Scan(&e.ID, &e.Name, &e.Status, &e.CreatedAt)
+		events = append(events, e)
+	}
+
+	c.JSON(http.StatusOK, events)
+}
+
+func GetMyAssignmentHandler(c *gin.Context) {
+	userID, _ := c.Get("userID")
+	eventID := c.Param("id")
+
+	var pID, name string
+	var assignedTo sql.NullString
+	err := db.DB.QueryRow(`
+		SELECT p.id, p.name, p.assigned_to
+		FROM participants p
+		WHERE p.event_id = $1 AND p.user_id = $2
+	`, eventID, userID).Scan(&pID, &name, &assignedTo)
+
+	if err == sql.ErrNoRows {
+		c.JSON(http.StatusNotFound, gin.H{"error": "You are not a participant in this event"})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+		return
+	}
+
+	var assignedName string
+	if assignedTo.Valid {
+		db.DB.QueryRow("SELECT name FROM participants WHERE id = $1", assignedTo.String).Scan(&assignedName)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"participant_id": pID,
+		"name":           name,
+		"assigned_to":    assignedTo,
+		"assigned_name":  assignedName,
+	})
+}
+
+func RevealAPIHandler(c *gin.Context) {
+	token := c.Param("token")
+	var name, assignedName string
+	var revealedAt *time.Time
+
+	err := db.DB.QueryRow(`
+		SELECT p.name, a.name, p.revealed_at
+		FROM participants p 
+		JOIN participants a ON p.assigned_to = a.id 
+		WHERE p.access_token = $1`, token).Scan(&name, &assignedName, &revealedAt)
+
+	if err == sql.ErrNoRows {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Link invalido"})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error del servidor"})
+		return
+	}
+
+	if revealedAt != nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Este resultado ya fue revelado anteriormente. Por seguridad, solo se puede ver una vez."})
+		return
+	}
+
+	// Marcar como revelado
+	_, _ = db.DB.Exec("UPDATE participants SET revealed_at = CURRENT_TIMESTAMP WHERE access_token = $1", token)
+
+	c.JSON(http.StatusOK, gin.H{
+		"name":          name,
+		"assigned_name": assignedName,
+	})
+}
+
 func JoinEventHandler(c *gin.Context) {
 	var req JoinEventRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -210,6 +301,7 @@ func JoinEventHandler(c *gin.Context) {
 		return
 	}
 
+	// Check if user is already a participant (by name or user_id)
 	var exists bool
 	err = db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM participants WHERE event_id = $1 AND name = $2)", eventID, req.Name).Scan(&exists)
 	if err != nil {
@@ -221,7 +313,24 @@ func JoinEventHandler(c *gin.Context) {
 		return
 	}
 
-	_, err = db.DB.Exec("INSERT INTO participants (event_id, name) VALUES ($1, $2)", eventID, req.Name)
+	// Link to user if authenticated
+	userID, hasUser := c.Get("userID")
+	if hasUser {
+		// Check if user already joined this event
+		var userExists bool
+		err = db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM participants WHERE event_id = $1 AND user_id = $2)", eventID, userID).Scan(&userExists)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+			return
+		}
+		if userExists {
+			c.JSON(http.StatusConflict, gin.H{"error": "You already joined this event"})
+			return
+		}
+		_, err = db.DB.Exec("INSERT INTO participants (event_id, name, user_id) VALUES ($1, $2, $3)", eventID, req.Name, userID)
+	} else {
+		_, err = db.DB.Exec("INSERT INTO participants (event_id, name) VALUES ($1, $2)", eventID, req.Name)
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to join event"})
 		return

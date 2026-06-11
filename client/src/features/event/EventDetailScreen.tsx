@@ -5,14 +5,16 @@ import { apiClient } from '../../shared/utils/api';
 import { Button } from '../../shared/components/Button';
 import { ParticipantList } from './components/ParticipantList';
 import { ParticipantInput } from './components/ParticipantInput';
-import { ChevronLeft, Play } from 'lucide-react-native';
+import { ChevronLeft, Play, MessageCircle } from 'lucide-react-native';
 
 const EventDetailScreen = ({ route, navigation }: any) => {
-  const { eventId, eventName, status: initialStatus } = route.params;
+  const { eventId, eventName, status: initialStatus, role = 'organizer' } = route.params;
   const [participants, setParticipants] = useState<any[]>([]);
   const [status, setStatus] = useState(initialStatus);
   const [loading, setLoading] = useState(true);
   const [shuffling, setShuffling] = useState(false);
+  const [myAssignment, setMyAssignment] = useState<any>(null);
+  const isOrganizer = role === 'organizer';
 
   const fetchData = async () => {
     try {
@@ -26,8 +28,20 @@ const EventDetailScreen = ({ route, navigation }: any) => {
     }
   };
 
+  const fetchMyAssignment = async () => {
+    if (!isOrganizer && status === 'shuffled') {
+      try {
+        const data = await apiClient.get(`/events/${eventId}/my-assignment`);
+        setMyAssignment(data);
+      } catch (e) {
+        console.error('Assignment error:', e);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchMyAssignment();
   }, [eventId]);
 
   const handleShuffle = async () => {
@@ -124,18 +138,34 @@ const EventDetailScreen = ({ route, navigation }: any) => {
             {status === 'shuffled' ? 'Sorteo Finalizado' : 'Borrador'}
           </Text>
         </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Chat', { eventId, eventName })} style={styles.chatBtn}>
+          <MessageCircle size={24} color={Theme.colors.cta} />
+        </TouchableOpacity>
       </View>
 
-      <ParticipantList 
+      {!isOrganizer && status === 'shuffled' && myAssignment && (
+        <View style={styles.assignmentCard}>
+          <Text style={styles.assignmentLabel}>¡Tu amigo invisible es:</Text>
+          <Text style={styles.assignmentName}>{myAssignment.assigned_name || '...'}</Text>
+        </View>
+      )}
+
+      {!isOrganizer && status === 'draft' && (
+        <View style={styles.waitingCard}>
+          <Text style={styles.waitingText}>Esperando a que el organizador realice el sorteo...</Text>
+        </View>
+      )}
+
+      <ParticipantList
         participants={participants}
-        onPress={(p) => status === 'shuffled' && handleShare(p)}
-        onDelete={handleDeleteParticipant}
-        showShareIcon={status === 'shuffled'}
-        showDeleteIcon={status === 'draft'}
+        onPress={(p) => isOrganizer && status === 'shuffled' && handleShare(p)}
+        onDelete={isOrganizer ? handleDeleteParticipant : undefined}
+        showShareIcon={isOrganizer && status === 'shuffled'}
+        showDeleteIcon={isOrganizer && status === 'draft'}
         ListHeaderComponent={
           <View style={styles.listHeader}>
             <Text style={styles.label}>Participantes ({participants.length})</Text>
-            {status === 'draft' && (
+            {isOrganizer && status === 'draft' && (
               <View style={styles.inputWrapper}>
                 <ParticipantInput onAdd={handleAddParticipant} />
               </View>
@@ -144,15 +174,17 @@ const EventDetailScreen = ({ route, navigation }: any) => {
         }
         ListFooterComponent={
           <View style={styles.footer}>
-            {status === 'shuffled' ? (
-              <Text style={styles.infoText}>Pulsa en cada participante para compartir su link de revelación.</Text>
-            ) : (
-              <Button 
-                title="Realizar Sorteo" 
-                onPress={handleShuffle} 
-                loading={shuffling}
-                icon={<Play size={20} color="white" />}
-              />
+            {isOrganizer && (
+              status === 'shuffled' ? (
+                <Text style={styles.infoText}>Pulsa en cada participante para compartir su link de revelación.</Text>
+              ) : (
+                <Button
+                  title="Realizar Sorteo"
+                  onPress={handleShuffle}
+                  loading={shuffling}
+                  icon={<Play size={20} color="white" />}
+                />
+              )
             )}
           </View>
         }
@@ -211,7 +243,43 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fonts.body,
     color: Theme.colors.gray,
     fontSize: 14,
-  }
+  },
+  chatBtn: {
+    padding: Theme.spacing.sm,
+    marginLeft: Theme.spacing.sm,
+  },
+  assignmentCard: {
+    backgroundColor: '#DEF7EC',
+    borderRadius: Theme.radius.md,
+    padding: Theme.spacing.md,
+    marginHorizontal: Theme.spacing.lg,
+    marginBottom: Theme.spacing.md,
+    alignItems: 'center',
+  },
+  assignmentLabel: {
+    fontFamily: Theme.fonts.body,
+    fontSize: 14,
+    color: '#03543F',
+    marginBottom: Theme.spacing.sm,
+  },
+  assignmentName: {
+    fontFamily: Theme.fonts.heading,
+    fontSize: 24,
+    color: '#03543F',
+  },
+  waitingCard: {
+    backgroundColor: '#FEF3C7',
+    borderRadius: Theme.radius.md,
+    padding: Theme.spacing.md,
+    marginHorizontal: Theme.spacing.lg,
+    marginBottom: Theme.spacing.md,
+    alignItems: 'center',
+  },
+  waitingText: {
+    fontFamily: Theme.fonts.body,
+    fontSize: 14,
+    color: '#92400E',
+  },
 });
 
 export default EventDetailScreen;

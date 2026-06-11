@@ -26,9 +26,32 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "scheme": "amigoinvisible",
     "plugins": [
       "expo-font",
       "expo-secure-store"
-    ]
+    ],
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFF1F2"
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "amigoinvisible"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.amigoinvisible.app"
+    }
   }
 }

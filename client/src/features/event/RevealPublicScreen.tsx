@@ -28,43 +28,20 @@ const RevealPublicScreen = ({ route }: any) => {
 
   const fetchReveal = async () => {
     try {
-      // Para la revelación pública, usamos la ruta directa del backend
-      const response = await fetch(`http://192.168.100.94:8080/r/${token}`);
-      
-      if (response.status === 403) {
+      // Use JSON API instead of HTML parsing
+      const data = await apiClient.get(`/reveal/${token}`);
+      setResult({
+        name: data.name,
+        assignedName: data.assigned_name
+      });
+    } catch (e: any) {
+      if (e.message && e.message.includes('403')) {
         setError('Este resultado ya fue revelado anteriormente. Por seguridad, solo se puede ver una vez.');
-        setLoading(false);
-        return;
-      }
-      
-      if (!response.ok) {
+      } else if (e.message && e.message.includes('404')) {
         setError('Link inválido o expirado');
-        setLoading(false);
-        return;
-      }
-
-      // Parse HTML response to extract data (simplified approach)
-      const html = await response.text();
-      
-      // Try to extract name and assignedName from the HTML
-      const nameMatch = html.match(/Name:\s*([^<]+)/);
-      const assignedMatch = html.match(/AssignedName:\s*([^<]+)/);
-      
-      if (nameMatch && assignedMatch) {
-        setResult({
-          name: nameMatch[1].trim(),
-          assignedName: assignedMatch[1].trim()
-        });
       } else {
-        // Fallback: try to get from API
-        const data = await apiClient.get(`/reveal/${token}`);
-        setResult({
-          name: data.name,
-          assignedName: data.assigned_name
-        });
+        setError('Error de conexión. Verifica tu internet e intenta nuevamente.');
       }
-    } catch (e) {
-      setError('Error de conexión. Verifica tu internet e intenta nuevamente.');
     } finally {
       setLoading(false);
     }

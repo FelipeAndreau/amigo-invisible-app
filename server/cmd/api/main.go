@@ -3,6 +3,8 @@ package main
 import (
 	"amigo-invisible-server/internal/auth"
 	"amigo-invisible-server/internal/event"
+	"amigo-invisible-server/internal/friends"
+	"amigo-invisible-server/internal/messages"
 	"amigo-invisible-server/internal/platform/db"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -52,8 +54,8 @@ func main() {
 			authGroup.POST("/login", auth.LoginHandler)
 		}
 
-		api.GET("/reveal/:token", event.RevealHandler)
-		r.GET("/r/:token", event.RevealHandler) // Ruta corta: /r/TOKEN
+		api.GET("/reveal/:token", event.RevealAPIHandler)
+		r.GET("/r/:token", event.RevealHandler) // Ruta corta: /r/TOKEN (HTML fallback)
 
 		// Rutas protegidas
 		protected := api.Group("/")
@@ -67,10 +69,15 @@ func main() {
 			protected.POST("/events/:id/shuffle", event.ShuffleEventHandler)
 			protected.DELETE("/events/:id/participants/:participant_id", event.DeleteParticipantHandler)
 			protected.POST("/events/:id/invite", event.GenerateInviteHandler)
+			protected.GET("/events/participating", event.ListParticipantEventsHandler)
+			protected.GET("/events/:id/my-assignment", event.GetMyAssignmentHandler)
+			protected.POST("/events/join", event.JoinEventHandler)
+			protected.GET("/friends", friends.ListFriendsHandler)
+			protected.POST("/friends", friends.AddFriendHandler)
+			protected.DELETE("/friends/:id", friends.DeleteFriendHandler)
+			protected.GET("/events/:id/messages", messages.ListMessagesHandler)
+			protected.POST("/events/:id/messages", messages.CreateMessageHandler)
 		}
-
-		// Ruta pública para unirse a eventos
-		api.POST("/events/join", event.JoinEventHandler)
 	}
 
 	r.Run("0.0.0.0:8080")

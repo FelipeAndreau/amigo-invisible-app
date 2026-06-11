@@ -81,7 +81,7 @@ export const RevealCard = ({
               onReset();
             }}
           >
-            <RefreshCcw color={Theme.white} size={20} style={{ marginRight: 8 }} />
+            <RefreshCcw color={Theme.colors.white} size={20} style={{ marginRight: 8 }} />
             <Text style={styles.resetButtonText}>Finalizar Sorteo</Text>
           </TouchableOpacity>
         )}
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   card: {
-    backgroundColor: Theme.white,
+    backgroundColor: Theme.colors.white,
     padding: 32,
     borderRadius: 32,
     alignItems: 'center',
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   revealButtonText: {
     fontFamily: 'Fredoka-Bold',
-    color: Theme.white,
+    color: Theme.colors.white,
     fontSize: 18,
     letterSpacing: 1,
   },
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   resetButtonText: {
     fontFamily: 'Fredoka-Bold',
-    color: Theme.white,
+    color: Theme.colors.white,
     fontSize: 16,
   },
   centered: {

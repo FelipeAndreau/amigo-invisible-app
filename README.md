@@ -82,19 +82,67 @@ Este proyecto es una aplicación móvil para organizar sorteos de "Amigo Invisib
 
 ## 🧪 Cómo Probar la App (Flujo Entrega 2)
 
-1. **Autenticación**: Regístrate como organizador con tu email y una contraseña.
-2. **Dashboard**: Verás tu lista de sorteos (vacía al inicio). Pulsa el botón "+" para crear uno.
-3. **Gestión de Evento**:
-   - Ponle un nombre al sorteo.
-   - Agrega a tus amigos uno por uno.
-   - Puedes eliminar participantes si te equivocas (antes de sortear).
-4. **Realizar Sorteo**: Pulsa "Realizar Sorteo" (mínimo 3 personas). El servidor asignará los resultados de forma segura.
-5. **Compartir Links Mágicos**:
-   - Pulsa sobre cada nombre de la lista.
-   - Se abrirá el menú para compartir un link único por WhatsApp/Email.
-6. **Revelación Web**: Al abrir el link en el navegador, el participante verá su resultado con un efecto de confeti. El link es de un solo uso para garantizar la privacidad.
+### Features implementadas en E2:
+- **Dashboard dual**: Eventos como organizador + eventos como participante
+- **Unirse a sorteo**: Botón "🔗 Unirse" en el header del Dashboard, ingresás código de invitación
+- **Chat placeholder**: Dentro de cada evento, botón "💬 Chat" con mensajes mock y input deshabilitado
+- **Amigos/Contactos**: Botón "👥 Contactos" en el header, agregar/eliminar contactos
+- **Deep linking**: Configurado scheme `amigoinvisible://` para abrir la app desde links (Expo Go)
+- **Reveal API JSON**: La app ya no parsea HTML, consume JSON directamente
+
+### Flujo completo:
+1. **Autenticación**: Regístrate como organizador.
+2. **Dashboard**: Verás dos secciones: "Organizador" (tus sorteos) y "Participando" (sorteos a los que te uniste).
+3. **Crear sorteo**: Pulsa "+" FAB, agregá mínimo 3 participantes, sorteá.
+4. **Compartir links**: En un evento sorteado, tocá un participante para compartir su link mágico.
+5. **Unirse como invitado**: Usá el botón "🔗 Unirse" en el Dashboard, ingresá el código de invitación.
+6. **Ver asignación**: Si sos participante y el sorteo ya se hizo, verás "¡Tu amigo invisible es: [nombre]!" en el detalle del evento.
+7. **Chat**: Dentro de cualquier evento, tocá el ícono de chat para ver la UI placeholder.
 
 ---
+
+## ⚡ Cómo levantar todo (paso a paso)
+
+### 1. Bajar todo lo que esté corriendo
+```bash
+docker compose down
+```
+
+### 2. Levantar base de datos + backend (Docker)
+```bash
+docker compose up -d database backend
+```
+- Esperá 5 segundos a que PostgreSQL esté healthy.
+- El backend se auto-compila con `air` y se reinicia solo si cambiás código.
+
+### 3. Verificar que esté todo OK
+```bash
+curl http://localhost:8080/health
+# Debería responder: {"status":"up","version":"1.0.0"}
+```
+
+### 4. Levantar frontend (Expo)
+```bash
+cd client
+npm install   # si es primera vez
+npx expo start --lan
+```
+- Escaneá el QR con **Expo Go** en tu celular.
+- Si usás emulador: `i` (iOS) o `a` (Android).
+
+### 5. Cambiar la IP del backend (si usás Expo Go en celular)
+En `client/src/shared/utils/api.ts`, reemplazá:
+```typescript
+const LOCAL_IP = '192.168.100.94'; // ← pon la IP de tu PC en la red WiFi
+```
+
+### 6. Verificar features nuevas
+- Registrate / logueate
+- Creá un evento, agregá 3 participantes, sorteá
+- Generá un código de invitación
+- Desde otra cuenta (o logout/login), unite con el código
+- Verificá que aparezca en "Participando" en el Dashboard
+- Entrá al evento y verificá que se vea "¡Tu amigo invisible es: ...!"
 
 ## 👥 Equipo
 - Felipe Andreau
