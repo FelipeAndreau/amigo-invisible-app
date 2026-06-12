@@ -227,7 +227,7 @@ const EventDetailScreen = ({ route, navigation }: any) => {
           <>
             <TouchableOpacity 
               style={styles.actionBtn} 
-              onPress={() => navigation.navigate('Preferences', { eventId })}
+              onPress={() => navigation.navigate('Preferences', { eventId, mode: 'view' })}
             >
               <Heart size={20} color={Theme.colors.cta} />
               <Text style={styles.actionText}>Preferencias de mi asignado</Text>

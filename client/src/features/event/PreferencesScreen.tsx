@@ -4,12 +4,14 @@ import { Theme } from '../../shared/theme';
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { apiClient } from '../../shared/utils/api';
-import { ChevronLeft, Heart } from 'lucide-react-native';
+import { ChevronLeft, Heart, Eye } from 'lucide-react-native';
 
 const PreferencesScreen = ({ route, navigation }: any) => {
-  const { eventId } = route.params;
-  const [loading, setLoading] = useState(false);
+  const { eventId, mode = 'edit' } = route.params;
+  const isViewMode = mode === 'view';
+  const [loading, setLoading] = useState(isViewMode);
   const [saving, setSaving] = useState(false);
+  const [assignedName, setAssignedName] = useState('');
   
   const [favoriteColor, setFavoriteColor] = useState('');
   const [clothingSize, setClothingSize] = useState('');
@@ -18,6 +20,31 @@ const PreferencesScreen = ({ route, navigation }: any) => {
   const [allergies, setAllergies] = useState('');
   const [priceRange, setPriceRange] = useState('');
   const [aboutMe, setAboutMe] = useState('');
+
+  const fetchAssignmentPreferences = async () => {
+    try {
+      const data = await apiClient.get(`/events/${eventId}/my-assignment/preferences`);
+      setAssignedName(data.name || 'Tu amigo invisible');
+      setFavoriteColor(data.favorite_color || '');
+      setClothingSize(data.clothing_size || '');
+      setFavoriteFood(data.favorite_food || '');
+      setHobbies(data.hobbies || '');
+      setAllergies(data.allergies || '');
+      setPriceRange(data.price_range || '');
+      setAboutMe(data.about_me || '');
+    } catch (e: any) {
+      console.error('Error fetching assignment preferences:', e);
+      Alert.alert('Error', e.message || 'No se pudieron cargar las preferencias de tu asignado');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isViewMode) {
+      fetchAssignmentPreferences();
+    }
+  }, [eventId, isViewMode]);
 
   const handleSave = async () => {
     if (!favoriteColor.trim()) {
@@ -44,76 +71,113 @@ const PreferencesScreen = ({ route, navigation }: any) => {
     }
   };
 
+  const renderViewItem = (label: string, value: string) => (
+    <View style={styles.viewItem}>
+      <Text style={styles.viewLabel}>{label}</Text>
+      <Text style={styles.viewValue}>{value || 'No especificado'}</Text>
+    </View>
+  );
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+            <ChevronLeft size={24} color={Theme.colors.text} />
+          </TouchableOpacity>
+          <Text style={styles.title}>Cargando...</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
           <ChevronLeft size={24} color={Theme.colors.text} />
         </TouchableOpacity>
-        <Text style={styles.title}>Mis Preferencias</Text>
+        <Text style={styles.title}>
+          {isViewMode ? `Preferencias de ${assignedName}` : 'Mis Preferencias'}
+        </Text>
       </View>
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.form}>
-        <Text style={styles.subtitle}>¡Ayuda a tu amigo invisible a elegir el regalo perfecto!</Text>
-        
-        <Input
-          label="Color favorito *"
-          placeholder="Ej: Rojo, Azul, Verde"
-          value={favoriteColor}
-          onChangeText={setFavoriteColor}
-        />
-        
-        <Input
-          label="Talle de ropa"
-          placeholder="Ej: S, M, L, XL"
-          value={clothingSize}
-          onChangeText={setClothingSize}
-        />
-        
-        <Input
-          label="Comida/dulce favorito"
-          placeholder="Ej: Chocolate, Helado, Pizza"
-          value={favoriteFood}
-          onChangeText={setFavoriteFood}
-        />
-        
-        <Input
-          label="Hobbies/Intereses"
-          placeholder="Ej: Leer, deportes, música, cocinar"
-          value={hobbies}
-          onChangeText={setHobbies}
-        />
-        
-        <Input
-          label="Alergias o restricciones"
-          placeholder="Ej: Ninguna, celiaquía, alergia a frutos secos"
-          value={allergies}
-          onChangeText={setAllergies}
-        />
-        
-        <Input
-          label="Rango de precio sugerido"
-          placeholder="Ej: $500-1000, $1000-2000, $2000+"
-          value={priceRange}
-          onChangeText={setPriceRange}
-        />
-        
-        <Input
-          label="Contame más sobre vos"
-          placeholder="¿Qué te gustaría recibir? ¿Algo que no te gustaría?"
-          value={aboutMe}
-          onChangeText={setAboutMe}
-          multiline
-        />
+        {isViewMode ? (
+          <>
+            <Text style={styles.subtitle}>¡Estas son las preferencias de tu amigo invisible!</Text>
+            {renderViewItem('Color favorito', favoriteColor)}
+            {renderViewItem('Talle de ropa', clothingSize)}
+            {renderViewItem('Comida/dulce favorito', favoriteFood)}
+            {renderViewItem('Hobbies/Intereses', hobbies)}
+            {renderViewItem('Alergias o restricciones', allergies)}
+            {renderViewItem('Rango de precio sugerido', priceRange)}
+            {renderViewItem('Contame más sobre vos', aboutMe)}
+          </>
+        ) : (
+          <>
+            <Text style={styles.subtitle}>¡Ayuda a tu amigo invisible a elegir el regalo perfecto!</Text>
+            
+            <Input
+              label="Color favorito *"
+              placeholder="Ej: Rojo, Azul, Verde"
+              value={favoriteColor}
+              onChangeText={setFavoriteColor}
+            />
+            
+            <Input
+              label="Talle de ropa"
+              placeholder="Ej: S, M, L, XL"
+              value={clothingSize}
+              onChangeText={setClothingSize}
+            />
+            
+            <Input
+              label="Comida/dulce favorito"
+              placeholder="Ej: Chocolate, Helado, Pizza"
+              value={favoriteFood}
+              onChangeText={setFavoriteFood}
+            />
+            
+            <Input
+              label="Hobbies/Intereses"
+              placeholder="Ej: Leer, deportes, música, cocinar"
+              value={hobbies}
+              onChangeText={setHobbies}
+            />
+            
+            <Input
+              label="Alergias o restricciones"
+              placeholder="Ej: Ninguna, celiaquía, alergia a frutos secos"
+              value={allergies}
+              onChangeText={setAllergies}
+            />
+            
+            <Input
+              label="Rango de precio sugerido"
+              placeholder="Ej: $500-1000, $1000-2000, $2000+"
+              value={priceRange}
+              onChangeText={setPriceRange}
+            />
+            
+            <Input
+              label="Contame más sobre vos"
+              placeholder="¿Qué te gustaría recibir? ¿Algo que no te gustaría?"
+              value={aboutMe}
+              onChangeText={setAboutMe}
+              multiline
+            />
 
-        <View style={{ height: 20 }} />
-        
-        <Button
-          title="Guardar Preferencias"
-          onPress={handleSave}
-          loading={saving}
-          icon={<Heart size={20} color="white" />}
-        />
+            <View style={{ height: 20 }} />
+            
+            <Button
+              title="Guardar Preferencias"
+              onPress={handleSave}
+              loading={saving}
+              icon={<Heart size={20} color="white" />}
+            />
+          </>
+        )}
         
         <View style={{ height: 40 }} />
       </ScrollView>
@@ -154,6 +218,23 @@ const styles = StyleSheet.create({
     color: Theme.colors.gray,
     marginBottom: Theme.spacing.md,
     textAlign: 'center',
+  },
+  viewItem: {
+    backgroundColor: Theme.colors.white,
+    borderRadius: Theme.radius.md,
+    padding: Theme.spacing.md,
+    marginBottom: Theme.spacing.sm,
+  },
+  viewLabel: {
+    fontFamily: Theme.fonts.heading,
+    fontSize: 14,
+    color: Theme.colors.gray,
+    marginBottom: 4,
+  },
+  viewValue: {
+    fontFamily: Theme.fonts.body,
+    fontSize: 16,
+    color: Theme.colors.text,
   },
 });
 

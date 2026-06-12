@@ -46,6 +46,13 @@ const GiftProgressScreen = ({ route, navigation }: any) => {
     }
   };
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchProgress();
+    });
+    return unsubscribe;
+  }, [navigation, eventId]);
+
   const ProgressItem = ({ 
     title, 
     description, 

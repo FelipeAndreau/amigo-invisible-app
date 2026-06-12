@@ -12,13 +12,21 @@ const GalleryScreen = ({ route, navigation }: any) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  const [galleryAvailable, setGalleryAvailable] = useState(true);
+  const [galleryMessage, setGalleryMessage] = useState('');
+
   const fetchPhotos = useCallback(async () => {
     try {
       const data = await apiClient.get(`/events/${eventId}/gallery`);
       setPhotos(data);
+      setGalleryAvailable(true);
+      setGalleryMessage('');
     } catch (e: any) {
       console.error('Error fetching photos:', e);
-      if (e.message && !e.message.includes('Gallery is only available')) {
+      if (e.message && e.message.includes('Gallery is only available')) {
+        setGalleryAvailable(false);
+        setGalleryMessage('La galería estará disponible después de la fecha del evento');
+      } else {
         Alert.alert('Error', e.message);
       }
     } finally {
@@ -82,27 +90,37 @@ const GalleryScreen = ({ route, navigation }: any) => {
         <Text style={styles.title}>Galería</Text>
       </View>
 
-      <FlatList
-        data={photos}
-        renderItem={renderPhoto}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        contentContainerStyle={styles.grid}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={fetchPhotos} />
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Camera size={48} color={Theme.colors.gray} />
-            <Text style={styles.emptyText}>Aún no hay fotos</Text>
-            <Text style={styles.emptySubtext}>¡Sé el primero en subir una foto!</Text>
-          </View>
-        }
-      />
+      {galleryAvailable ? (
+        <FlatList
+          data={photos}
+          renderItem={renderPhoto}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          contentContainerStyle={styles.grid}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={fetchPhotos} />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Camera size={48} color={Theme.colors.gray} />
+              <Text style={styles.emptyText}>Aún no hay fotos</Text>
+              <Text style={styles.emptySubtext}>¡Sé el primero en subir una foto!</Text>
+            </View>
+          }
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Camera size={48} color={Theme.colors.gray} />
+          <Text style={styles.emptyText}>Galería no disponible</Text>
+          <Text style={styles.emptySubtext}>{galleryMessage}</Text>
+        </View>
+      )}
 
-      <TouchableOpacity style={styles.fab} onPress={handleUpload}>
-        <Upload size={24} color={Theme.colors.white} />
-      </TouchableOpacity>
+      {galleryAvailable && (
+        <TouchableOpacity style={styles.fab} onPress={handleUpload}>
+          <Upload size={24} color={Theme.colors.white} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
