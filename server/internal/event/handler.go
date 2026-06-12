@@ -41,7 +41,10 @@ func CreateEventHandler(c *gin.Context) {
 		return
 	}
 
-	tx.Commit()
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to commit transaction"})
+		return
+	}
 	c.JSON(http.StatusCreated, gin.H{"event_id": eventID, "invite_code": inviteCode})
 }
 
@@ -133,18 +136,31 @@ func ShuffleEventHandler(c *gin.Context) {
 		return
 	}
 
-	// Get participant names for system message
+	// Get event name for system message
 	var eventName string
-	db.DB.QueryRow("SELECT name FROM events WHERE id = $1", eventID).Scan(&eventName)
+	err = tx.QueryRow("SELECT name FROM events WHERE id = $1", eventID).Scan(&eventName)
+	if err != nil {
+		tx.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get event name"})
+		return
+	}
 
 	// Create system message for shuffle
 	shuffleMessage := fmt.Sprintf("🎉 ¡El sorteo de '%s' se realizó! Que empiece la diversión 🎁", eventName)
-	db.DB.Exec(
+	_, err = tx.Exec(
 		"INSERT INTO messages (event_id, user_id, content, message_type) VALUES ($1, $2, $3, 'system')",
 		eventID, userID, shuffleMessage,
 	)
+	if err != nil {
+		tx.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create system message"})
+		return
+	}
 
-	tx.Commit()
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to commit transaction"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "Shuffle completed successfully"})
 }
 

@@ -20,11 +20,11 @@ func validatePasswordStrength(password string) error {
 	if len(password) < 8 {
 		return errors.New("La contraseña debe tener al menos 8 caracteres")
 	}
-	
+
 	hasUpper := false
 	hasLower := false
 	hasNumber := false
-	
+
 	for _, char := range password {
 		switch {
 		case char >= 'A' && char <= 'Z':
@@ -35,7 +35,7 @@ func validatePasswordStrength(password string) error {
 			hasNumber = true
 		}
 	}
-	
+
 	if !hasUpper {
 		return errors.New("La contraseña debe contener al menos una mayúscula")
 	}
@@ -45,7 +45,7 @@ func validatePasswordStrength(password string) error {
 	if !hasNumber {
 		return errors.New("La contraseña debe contener al menos un número")
 	}
-	
+
 	return nil
 }
 

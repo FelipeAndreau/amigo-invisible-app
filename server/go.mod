@@ -1,6 +1,6 @@
 module amigo-invisible-server
 
-go 1.26.2
+go 1.24
 
 require (
 	github.com/gin-gonic/gin v1.12.0

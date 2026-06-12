@@ -10,7 +10,9 @@ import (
 // GenerateMagicToken creates a unique secure string for participant access
 func GenerateMagicToken() string {
 	b := make([]byte, 16)
-	rand.Read(b)
+	if _, err := rand.Read(b); err != nil {
+		panic(err) // Should never fail with crypto/rand
+	}
 	return hex.EncodeToString(b)
 }
 
@@ -21,10 +23,10 @@ func ShuffleParticipants(participantIDs []string) (map[string]string, error) {
 		return nil, errors.New("minimum 3 participants required for a fair shuffle")
 	}
 
-	// Simple approach for derangement: 
+	// Simple approach for derangement:
 	// Shuffle and check until no one is at their original position
 	// For N >= 3, the probability of a derangement is approx 1/e (~36.7%)
-	
+
 	targets := make([]string, n)
 	copy(targets, participantIDs)
 

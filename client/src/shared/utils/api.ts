@@ -2,9 +2,9 @@ import * as SecureStore from 'expo-secure-store';
 
 // ⚠️ IMPORTANTE: Cambiar esta IP por la IP de tu PC en la red local
 // para que Expo Go en tu celular pueda conectarse al backend.
-// Ejemplo: '192.168.1.100'
-const LOCAL_IP = '192.168.100.251';
-const BASE_URL = `http://${LOCAL_IP}:8080/api/v1`;
+// En producción, usar la URL de tu servidor (ej: https://api.tuapp.com)
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.100.251:8080/api/v1';
+const BASE_URL = API_URL;
 
 // Timeout para requests (5 segundos)
 const FETCH_TIMEOUT = 5000;
@@ -43,7 +43,6 @@ async function fetchWithTimeout(url: string, options: RequestInit, timeout = FET
 export const apiClient = {
   get: async (endpoint: string) => {
     const headers = await getHeaders();
-    console.log(`[API] GET ${BASE_URL}${endpoint}`);
     try {
       const response = await fetchWithTimeout(`${BASE_URL}${endpoint}`, { headers });
       if (!response.ok) {
@@ -52,13 +51,11 @@ export const apiClient = {
       }
       return response.json();
     } catch (e) {
-      console.error(`[API ERROR] GET ${endpoint}:`, e);
       throw e;
     }
   },
   post: async (endpoint: string, body: any) => {
     const headers = await getHeaders();
-    console.log(`[API] POST ${BASE_URL}${endpoint}`, body);
     try {
       const response = await fetchWithTimeout(`${BASE_URL}${endpoint}`, {
         method: 'POST',
@@ -71,13 +68,11 @@ export const apiClient = {
       }
       return response.json();
     } catch (e) {
-      console.error(`[API ERROR] POST ${endpoint}:`, e);
       throw e;
     }
   },
   delete: async (endpoint: string) => {
     const headers = await getHeaders();
-    console.log(`[API] DELETE ${BASE_URL}${endpoint}`);
     try {
       const response = await fetchWithTimeout(`${BASE_URL}${endpoint}`, {
         method: 'DELETE',
@@ -89,13 +84,11 @@ export const apiClient = {
       }
       return response.json();
     } catch (e) {
-      console.error(`[API ERROR] DELETE ${endpoint}:`, e);
       throw e;
     }
   },
   patch: async (endpoint: string, body: any) => {
     const headers = await getHeaders();
-    console.log(`[API] PATCH ${BASE_URL}${endpoint}`, body);
     try {
       const response = await fetchWithTimeout(`${BASE_URL}${endpoint}`, {
         method: 'PATCH',
@@ -108,7 +101,6 @@ export const apiClient = {
       }
       return response.json();
     } catch (e) {
-      console.error(`[API ERROR] PATCH ${endpoint}:`, e);
       throw e;
     }
   },

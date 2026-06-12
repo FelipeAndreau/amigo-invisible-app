@@ -46,8 +46,12 @@ func ListEventParticipantsHandler(c *gin.Context) {
 		var p ParticipantWithMe
 		var email, assignedTo, puid *string
 		rows.Scan(&p.ID, &p.Name, &email, &assignedTo, &puid)
-		if email != nil { p.Email = *email }
-		if assignedTo != nil { p.AssignedTo = *assignedTo }
+		if email != nil {
+			p.Email = *email
+		}
+		if assignedTo != nil {
+			p.AssignedTo = *assignedTo
+		}
 		if puid != nil && *puid == uidStr {
 			p.IsMe = true
 		}

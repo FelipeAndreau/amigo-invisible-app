@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -13,7 +14,8 @@ var secretKey = []byte(getSecretKey())
 func getSecretKey() string {
 	key := os.Getenv("JWT_SECRET")
 	if key == "" {
-		// Fallback solo para desarrollo local
+		// Fallback solo para desarrollo local - NO usar en producción
+		fmt.Println("⚠️ WARNING: JWT_SECRET no está configurado. Usando fallback de desarrollo. Establezca JWT_SECRET en producción.")
 		key = "dev-secret-key-change-in-production"
 	}
 	return key

@@ -8,13 +8,13 @@ import (
 )
 
 type PreferencesRequest struct {
-	FavoriteColor  string `json:"favorite_color"`
-	ClothingSize   string `json:"clothing_size"`
-	FavoriteFood   string `json:"favorite_food"`
-	Hobbies        string `json:"hobbies"`
-	Allergies      string `json:"allergies"`
-	PriceRange     string `json:"price_range"`
-	AboutMe        string `json:"about_me"`
+	FavoriteColor string `json:"favorite_color"`
+	ClothingSize  string `json:"clothing_size"`
+	FavoriteFood  string `json:"favorite_food"`
+	Hobbies       string `json:"hobbies"`
+	Allergies     string `json:"allergies"`
+	PriceRange    string `json:"price_range"`
+	AboutMe       string `json:"about_me"`
 }
 
 func SavePreferencesHandler(c *gin.Context) {
