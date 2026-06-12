@@ -3,7 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 // ⚠️ IMPORTANTE: Cambiar esta IP por la IP de tu PC en la red local
 // para que Expo Go en tu celular pueda conectarse al backend.
 // Ejemplo: '192.168.1.100'
-const LOCAL_IP = '192.168.100.94';
+const LOCAL_IP = '192.168.100.251';
 const BASE_URL = `http://${LOCAL_IP}:8080/api/v1`;
 
 // Timeout para requests (5 segundos)
