@@ -4,6 +4,7 @@ import { Theme } from '../../shared/theme';
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { apiClient } from '../../shared/utils/api';
+import { useToast } from '../../shared/context/ToastContext';
 import { ChevronLeft, Heart, Eye } from 'lucide-react-native';
 
 const PreferencesScreen = ({ route, navigation }: any) => {
@@ -12,6 +13,7 @@ const PreferencesScreen = ({ route, navigation }: any) => {
   const [loading, setLoading] = useState(isViewMode);
   const [saving, setSaving] = useState(false);
   const [assignedName, setAssignedName] = useState('');
+  const { showError, showSuccess } = useToast();
   
   const [favoriteColor, setFavoriteColor] = useState('');
   const [clothingSize, setClothingSize] = useState('');
@@ -34,7 +36,7 @@ const PreferencesScreen = ({ route, navigation }: any) => {
       setAboutMe(data.about_me || '');
     } catch (e: any) {
       console.error('Error fetching assignment preferences:', e);
-      Alert.alert('Error', e.message || 'No se pudieron cargar las preferencias de tu asignado');
+      showError(e.message || 'No se pudieron cargar las preferencias de tu asignado');
     } finally {
       setLoading(false);
     }
@@ -48,7 +50,7 @@ const PreferencesScreen = ({ route, navigation }: any) => {
 
   const handleSave = async () => {
     if (!favoriteColor.trim()) {
-      Alert.alert('Error', 'Ingresa tu color favorito');
+      showError('Ingresa tu color favorito');
       return;
     }
 
@@ -63,9 +65,9 @@ const PreferencesScreen = ({ route, navigation }: any) => {
         price_range: priceRange.trim(),
         about_me: aboutMe.trim()
       });
-      Alert.alert('¡Guardado!', 'Tus preferencias fueron guardadas correctamente');
+      showSuccess('Tus preferencias fueron guardadas correctamente');
     } catch (e: any) {
-      Alert.alert('Error', e.message || 'No se pudieron guardar las preferencias');
+      showError(e.message || 'No se pudieron guardar las preferencias');
     } finally {
       setSaving(false);
     }

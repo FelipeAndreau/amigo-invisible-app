@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, 
 import { Theme } from '../../shared/theme';
 import { apiClient } from '../../shared/utils/api';
 import { useAuth } from '../../shared/hooks/useAuth';
+import { useToast } from '../../shared/context/ToastContext';
 import { LogOut, Plus, Users, Calendar, Trash2, Link2, History } from 'lucide-react-native';
 
 const DashboardScreen = ({ navigation }: any) => {
@@ -10,6 +11,7 @@ const DashboardScreen = ({ navigation }: any) => {
   const [participatingEvents, setParticipatingEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { logout } = useAuth();
+  const { showError, showSuccess } = useToast();
 
   const fetchEvents = async () => {
     try {
@@ -46,8 +48,9 @@ const DashboardScreen = ({ navigation }: any) => {
             try {
               await apiClient.delete(`/events/${id}`);
               fetchEvents();
+              showSuccess(`Sorteo "${name}" eliminado`);
             } catch (e: any) {
-              Alert.alert('Error', e.message);
+              showError(e.message || 'Error al eliminar sorteo');
             }
           }
         }

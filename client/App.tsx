@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from './src/shared/hooks/useAuth';
+import { ToastProvider } from './src/shared/context/ToastContext';
 import { useFonts, Fredoka_700Bold } from '@expo-google-fonts/fredoka';
 import { Nunito_400Regular, Nunito_700Bold } from '@expo-google-fonts/nunito';
 
@@ -66,9 +67,11 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AuthProvider>
-          <NavigationContainer>
-            <RootNavigator />
-          </NavigationContainer>
+          <ToastProvider>
+            <NavigationContainer>
+              <RootNavigator />
+            </NavigationContainer>
+          </ToastProvider>
         </AuthProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

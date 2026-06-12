@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert, Refre
 import { Theme } from '../../shared/theme';
 import { Button } from '../../shared/components/Button';
 import { apiClient } from '../../shared/utils/api';
+import { useToast } from '../../shared/context/ToastContext';
 import { ChevronLeft, Camera, Upload } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -11,6 +12,7 @@ const GalleryScreen = ({ route, navigation }: any) => {
   const [photos, setPhotos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { showError, showSuccess } = useToast();
 
   const [galleryAvailable, setGalleryAvailable] = useState(true);
   const [galleryMessage, setGalleryMessage] = useState('');
@@ -27,7 +29,7 @@ const GalleryScreen = ({ route, navigation }: any) => {
         setGalleryAvailable(false);
         setGalleryMessage('La galería estará disponible después de la fecha del evento');
       } else {
-        Alert.alert('Error', e.message);
+        showError(e.message);
       }
     } finally {
       setLoading(false);
@@ -42,7 +44,7 @@ const GalleryScreen = ({ route, navigation }: any) => {
   const handleUpload = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      Alert.alert('Permiso requerido', 'Necesitamos acceso a tu galería para subir fotos');
+      showError('Necesitamos acceso a tu galería para subir fotos');
       return;
     }
 
@@ -61,9 +63,9 @@ const GalleryScreen = ({ route, navigation }: any) => {
           caption: ''
         });
         fetchPhotos();
-        Alert.alert('¡Éxito!', 'Foto subida correctamente');
+        showSuccess('Foto subida correctamente');
       } catch (e: any) {
-        Alert.alert('Error', e.message || 'No se pudo subir la foto');
+        showError(e.message || 'No se pudo subir la foto');
       }
     }
   };

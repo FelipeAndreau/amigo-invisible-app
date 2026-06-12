@@ -62,10 +62,14 @@ func GetAssignmentPreferencesHandler(c *gin.Context) {
 	eventID := c.Param("id")
 
 	// Get participant's assigned_to
-	var assignedToID string
+	var assignedToID *string
 	err := db.DB.QueryRow("SELECT assigned_to FROM participants WHERE event_id = $1 AND user_id = $2", eventID, userID).Scan(&assignedToID)
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "You are not a participant in this event or no assignment yet"})
+		return
+	}
+	if assignedToID == nil || *assignedToID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No assignment yet for this event"})
 		return
 	}
 
@@ -73,13 +77,20 @@ func GetAssignmentPreferencesHandler(c *gin.Context) {
 	var prefs PreferencesRequest
 	var participantName string
 	err = db.DB.QueryRow(`
-		SELECT p.name, pr.favorite_color, pr.clothing_size, pr.favorite_food, pr.hobbies, pr.allergies, pr.price_range, pr.about_me
+		SELECT p.name, 
+			COALESCE(pr.favorite_color, ''), 
+			COALESCE(pr.clothing_size, ''), 
+			COALESCE(pr.favorite_food, ''), 
+			COALESCE(pr.hobbies, ''), 
+			COALESCE(pr.allergies, ''), 
+			COALESCE(pr.price_range, ''), 
+			COALESCE(pr.about_me, '')
 		FROM participants p
 		LEFT JOIN preferences pr ON pr.participant_id = p.id
 		WHERE p.id = $1
-	`, assignedToID).Scan(&participantName, &prefs.FavoriteColor, &prefs.ClothingSize, &prefs.FavoriteFood, &prefs.Hobbies, &prefs.Allergies, &prefs.PriceRange, &prefs.AboutMe)
+	`, *assignedToID).Scan(&participantName, &prefs.FavoriteColor, &prefs.ClothingSize, &prefs.FavoriteFood, &prefs.Hobbies, &prefs.Allergies, &prefs.PriceRange, &prefs.AboutMe)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get preferences"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get preferences: " + err.Error()})
 		return
 	}
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { Theme } from '../../shared/theme';
 import { apiClient } from '../../shared/utils/api';
+import { useToast } from '../../shared/context/ToastContext';
 import { ChevronLeft, Send } from 'lucide-react-native';
 
 const ChatScreen = ({ route, navigation }: any) => {
@@ -9,14 +10,15 @@ const ChatScreen = ({ route, navigation }: any) => {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const { showError } = useToast();
 
   const fetchMessages = useCallback(async () => {
     try {
       const data = await apiClient.get(`/events/${eventId}/messages`);
       // Reverse to show newest at bottom
       setMessages(data.reverse());
-    } catch (e) {
-      console.error('Fetch messages error:', e);
+    } catch (e: any) {
+      showError(e.message || 'Error al cargar mensajes');
     } finally {
       setLoading(false);
     }
@@ -37,7 +39,7 @@ const ChatScreen = ({ route, navigation }: any) => {
       await apiClient.post(`/events/${eventId}/messages`, { content: text });
       fetchMessages();
     } catch (e: any) {
-      console.error('Send message error:', e);
+      showError(e.message || 'Error al enviar mensaje');
     }
   };
 

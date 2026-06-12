@@ -4,6 +4,8 @@ import { Theme } from '../../shared/theme';
 import { apiClient } from '../../shared/utils/api';
 import { Button } from '../../shared/components/Button';
 import { ParticipantList } from './components/ParticipantList';
+import { useToast } from '../../shared/context/ToastContext';
+import { DatePickerModal } from '../../shared/components/DatePickerModal';
 import { ChevronLeft, Play, MessageCircle, Share2, Heart, Gift, Calendar, Image, Clock } from 'lucide-react-native';
 
 const EventDetailScreen = ({ route, navigation }: any) => {
@@ -16,7 +18,9 @@ const EventDetailScreen = ({ route, navigation }: any) => {
   const [inviteCode, setInviteCode] = useState(initialCode || '');
   const [eventDate, setEventDate] = useState<string | null>(null);
   const [countdown, setCountdown] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const isOrganizer = role === 'organizer';
+  const { showError, showSuccess, showInfo } = useToast();
 
   const fetchEventDate = async () => {
     try {
@@ -82,7 +86,7 @@ const EventDetailScreen = ({ route, navigation }: any) => {
 
   const handleShuffle = async () => {
     if (participants.length < 3) {
-        Alert.alert('Error', 'Necesitas al menos 3 participantes para el sorteo.');
+        showError('Necesitas al menos 3 participantes para el sorteo.');
         return;
     }
 
@@ -100,9 +104,9 @@ const EventDetailScreen = ({ route, navigation }: any) => {
               setStatus('shuffled');
               await fetchData();
               await fetchMyAssignment();
-              Alert.alert('¡Éxito!', 'Sorteo realizado. Cada participante puede ver su asignación en la app.');
+              showSuccess('Sorteo realizado. Cada participante puede ver su asignación en la app.');
             } catch (e: any) {
-              Alert.alert('Error', e.message);
+              showError(e.message || 'Error al realizar el sorteo');
             } finally {
               setShuffling(false);
             }
@@ -113,13 +117,17 @@ const EventDetailScreen = ({ route, navigation }: any) => {
   };
 
   const handleShareCode = async () => {
-    if (!inviteCode) return;
+    if (!inviteCode) {
+      showError('No hay código de invitación disponible');
+      return;
+    }
     try {
       await Share.share({
         message: `🎁 *¡Te invito a un Amigo Invisible!* 🎁\n\nSorteo: *${eventName}*\n\n📱 Código de invitación: *${inviteCode}*\n\nUnite descargando la app Amigo Invisible e ingresando este código.`,
       });
+      showInfo('Código compartido');
     } catch (error) {
-      console.error(error);
+      showError('No se pudo compartir el código');
     }
   };
 
@@ -136,8 +144,9 @@ const EventDetailScreen = ({ route, navigation }: any) => {
             try {
               await apiClient.delete(`/events/${eventId}/participants/${p.id}`);
               fetchData();
+              showSuccess(`${p.name} eliminado del sorteo`);
             } catch (e: any) {
-              Alert.alert('Error', e.message);
+              showError(e.message || 'Error al eliminar participante');
             }
           }
         }
@@ -252,30 +261,7 @@ const EventDetailScreen = ({ route, navigation }: any) => {
         {isOrganizer && status !== 'shuffled' && (
           <TouchableOpacity 
             style={styles.actionBtn} 
-            onPress={() => {
-              // Simple date picker simulation
-              Alert.alert(
-                'Fecha del intercambio',
-                'Ingresa la fecha (YYYY-MM-DD HH:MM)',
-                [
-                  { text: 'Cancelar', style: 'cancel' },
-                  { 
-                    text: 'Setear', 
-                    onPress: async () => {
-                      try {
-                        await apiClient.patch(`/events/${eventId}/date`, {
-                          event_date: '2026-12-25T18:00:00Z'
-                        });
-                        Alert.alert('Fecha seteada');
-                        fetchEventDate();
-                      } catch (e: any) {
-                        Alert.alert('Error', e.message);
-                      }
-                    }
-                  }
-                ]
-              );
-            }}
+            onPress={() => setShowDatePicker(true)}
           >
             <Calendar size={20} color={Theme.colors.cta} />
             <Text style={styles.actionText}>Setear fecha</Text>
@@ -307,6 +293,23 @@ const EventDetailScreen = ({ route, navigation }: any) => {
             )}
           </View>
         }
+      />
+
+      <DatePickerModal
+        visible={showDatePicker}
+        onClose={() => setShowDatePicker(false)}
+        onConfirm={async (date) => {
+          try {
+            await apiClient.patch(`/events/${eventId}/date`, {
+              event_date: date.toISOString()
+            });
+            showSuccess('Fecha del evento actualizada');
+            fetchEventDate();
+          } catch (e: any) {
+            showError(e.message || 'Error al actualizar la fecha');
+          }
+        }}
+        title="Fecha del intercambio"
       />
     </View>
   );

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { Theme } from '../../shared/theme';
 import { Button } from '../../shared/components/Button';
 import { apiClient } from '../../shared/utils/api';
+import { useToast } from '../../shared/context/ToastContext';
 import { ChevronLeft, ShoppingBag, Gift, Truck, CheckCircle } from 'lucide-react-native';
 
 const GiftProgressScreen = ({ route, navigation }: any) => {
@@ -12,6 +13,7 @@ const GiftProgressScreen = ({ route, navigation }: any) => {
   const [purchased, setPurchased] = useState(false);
   const [wrapped, setWrapped] = useState(false);
   const [delivered, setDelivered] = useState(false);
+  const { showError, showSuccess } = useToast();
 
   const fetchProgress = async () => {
     try {
@@ -38,9 +40,9 @@ const GiftProgressScreen = ({ route, navigation }: any) => {
         wrapped,
         delivered
       });
-      Alert.alert('¡Guardado!', 'Progreso actualizado');
+      showSuccess('Progreso actualizado');
     } catch (e: any) {
-      Alert.alert('Error', e.message || 'No se pudo guardar');
+      showError(e.message || 'No se pudo guardar');
     } finally {
       setSaving(false);
     }
