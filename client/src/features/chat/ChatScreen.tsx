@@ -43,17 +43,32 @@ const ChatScreen = ({ route, navigation }: any) => {
     }
   };
 
-  const renderMessage = ({ item }: any) => (
-    <View style={[styles.messageBubble, item.is_mine ? styles.myBubble : styles.otherBubble]}>
-      <Text style={[styles.senderLabel, item.is_mine ? styles.mySenderLabel : styles.otherSenderLabel]}>
-        {item.is_mine ? 'Tú' : 'Anónimo'}
-      </Text>
-      <Text style={styles.messageText}>{item.content}</Text>
-      <Text style={styles.timeText}>
-        {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-      </Text>
-    </View>
-  );
+  const renderMessage = ({ item }: any) => {
+    // System message (gift progress updates)
+    if (item.message_type === 'system') {
+      return (
+        <View style={styles.systemMessage}>
+          <Text style={styles.systemMessageText}>{item.content}</Text>
+          <Text style={styles.systemTimeText}>
+            {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </Text>
+        </View>
+      );
+    }
+
+    // Normal message
+    return (
+      <View style={[styles.messageBubble, item.is_mine ? styles.myBubble : styles.otherBubble]}>
+        <Text style={[styles.senderLabel, item.is_mine ? styles.mySenderLabel : styles.otherSenderLabel]}>
+          {item.is_mine ? 'Tú' : 'Anónimo'}
+        </Text>
+        <Text style={styles.messageText}>{item.content}</Text>
+        <Text style={styles.timeText}>
+          {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -154,6 +169,29 @@ const styles = StyleSheet.create({
     color: Theme.colors.gray,
     marginTop: 4,
     alignSelf: 'flex-end',
+  },
+  systemMessage: {
+    alignSelf: 'center',
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 16,
+    marginBottom: 12,
+    maxWidth: '85%',
+    marginTop: 4,
+  },
+  systemMessageText: {
+    fontFamily: Theme.fonts.body,
+    fontSize: 12,
+    color: '#6B7280',
+    textAlign: 'center',
+  },
+  systemTimeText: {
+    fontFamily: Theme.fonts.body,
+    fontSize: 10,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    marginTop: 4,
   },
   inputContainer: {
     flexDirection: 'row',

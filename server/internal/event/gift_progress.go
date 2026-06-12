@@ -2,6 +2,7 @@ package event
 
 import (
 	"amigo-invisible-server/internal/platform/db"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -42,6 +43,30 @@ func SaveGiftProgressHandler(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save gift progress"})
 		return
+	}
+
+	// Get user name for system message
+	var userName string
+	err = db.DB.QueryRow("SELECT name FROM users WHERE id = $1", userID).Scan(&userName)
+	if err != nil {
+		userName = "Alguien"
+	}
+
+	// Create system message based on progress
+	var messageContent string
+	if req.Purchased && req.Wrapped && req.Delivered {
+		messageContent = fmt.Sprintf("🎁 %s entregó su regalo", userName)
+	} else if req.Purchased && req.Wrapped {
+		messageContent = fmt.Sprintf("🎁 %s envolvió su regalo", userName)
+	} else if req.Purchased {
+		messageContent = fmt.Sprintf("🎁 %s compró su regalo", userName)
+	}
+
+	if messageContent != "" {
+		db.DB.Exec(
+			"INSERT INTO messages (event_id, user_id, content, message_type) VALUES ($1, $2, $3, 'system')",
+			eventID, userID, messageContent,
+		)
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Gift progress saved"})

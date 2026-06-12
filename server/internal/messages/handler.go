@@ -9,11 +9,12 @@ import (
 )
 
 type Message struct {
-	ID        string    `json:"id"`
-	EventID   string    `json:"event_id"`
-	Content   string    `json:"content"`
-	IsMine    bool      `json:"is_mine"`
-	CreatedAt time.Time `json:"created_at"`
+	ID          string    `json:"id"`
+	EventID     string    `json:"event_id"`
+	Content     string    `json:"content"`
+	MessageType string    `json:"message_type"`
+	IsMine      bool      `json:"is_mine"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 type CreateMessageRequest struct {
@@ -38,7 +39,7 @@ func ListMessagesHandler(c *gin.Context) {
 		return
 	}
 
-	rows, err := db.DB.Query("SELECT id, event_id, user_id, content, created_at FROM messages WHERE event_id = $1 ORDER BY created_at DESC LIMIT 50", eventID)
+	rows, err := db.DB.Query("SELECT id, event_id, user_id, content, message_type, created_at FROM messages WHERE event_id = $1 ORDER BY created_at DESC LIMIT 50", eventID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query messages"})
 		return
@@ -49,7 +50,7 @@ func ListMessagesHandler(c *gin.Context) {
 	for rows.Next() {
 		var m Message
 		var msgUserID string
-		rows.Scan(&m.ID, &m.EventID, &msgUserID, &m.Content, &m.CreatedAt)
+		rows.Scan(&m.ID, &m.EventID, &msgUserID, &m.Content, &m.MessageType, &m.CreatedAt)
 		m.IsMine = msgUserID == userID.(string)
 		messages = append(messages, m)
 	}
