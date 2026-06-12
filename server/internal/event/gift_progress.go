@@ -54,12 +54,12 @@ func SaveGiftProgressHandler(c *gin.Context) {
 
 	// Create system message based on progress
 	var messageContent string
-	if req.Purchased && req.Wrapped && req.Delivered {
-		messageContent = fmt.Sprintf("🎁 %s entregó su regalo", userName)
-	} else if req.Purchased && req.Wrapped {
-		messageContent = fmt.Sprintf("🎁 %s envolvió su regalo", userName)
+	if req.Delivered {
+		messageContent = fmt.Sprintf("🎉 %s entregó su regalo!", userName)
+	} else if req.Wrapped && req.Purchased {
+		messageContent = fmt.Sprintf("✨ %s tiene su regalo listo para entregar", userName)
 	} else if req.Purchased {
-		messageContent = fmt.Sprintf("🎁 %s compró su regalo", userName)
+		messageContent = fmt.Sprintf("🛍️ %s está preparando su regalo", userName)
 	}
 
 	if messageContent != "" {

@@ -3,6 +3,7 @@ package event
 import (
 	"amigo-invisible-server/internal/platform/db"
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -131,6 +132,17 @@ func ShuffleEventHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Status update failed"})
 		return
 	}
+
+	// Get participant names for system message
+	var eventName string
+	db.DB.QueryRow("SELECT name FROM events WHERE id = $1", eventID).Scan(&eventName)
+
+	// Create system message for shuffle
+	shuffleMessage := fmt.Sprintf("🎉 ¡El sorteo de '%s' se realizó! Que empiece la diversión 🎁", eventName)
+	db.DB.Exec(
+		"INSERT INTO messages (event_id, user_id, content, message_type) VALUES ($1, $2, $3, 'system')",
+		eventID, userID, shuffleMessage,
+	)
 
 	tx.Commit()
 	c.JSON(http.StatusOK, gin.H{"message": "Shuffle completed successfully"})
