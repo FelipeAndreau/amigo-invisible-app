@@ -4,7 +4,7 @@ import { Theme } from '../../shared/theme';
 import { apiClient } from '../../shared/utils/api';
 import { Button } from '../../shared/components/Button';
 import { ParticipantList } from './components/ParticipantList';
-import { ChevronLeft, Play, MessageCircle, Copy, Share2 } from 'lucide-react-native';
+import { ChevronLeft, Play, MessageCircle, Share2, Heart, Gift, Calendar, Image, Clock } from 'lucide-react-native';
 
 const EventDetailScreen = ({ route, navigation }: any) => {
   const { eventId, eventName, status: initialStatus, role = 'organizer', inviteCode: initialCode } = route.params;
@@ -14,7 +14,42 @@ const EventDetailScreen = ({ route, navigation }: any) => {
   const [shuffling, setShuffling] = useState(false);
   const [myAssignment, setMyAssignment] = useState<any>(null);
   const [inviteCode, setInviteCode] = useState(initialCode || '');
+  const [eventDate, setEventDate] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState('');
   const isOrganizer = role === 'organizer';
+
+  const fetchEventDate = async () => {
+    try {
+      const data = await apiClient.get(`/events/${eventId}/date`);
+      if (data.event_date) {
+        setEventDate(data.event_date);
+      }
+    } catch (e) {
+      console.error('Error fetching event date:', e);
+    }
+  };
+
+  useEffect(() => {
+    let interval: any;
+    if (eventDate) {
+      const updateCountdown = () => {
+        const now = new Date();
+        const target = new Date(eventDate);
+        const diff = target.getTime() - now.getTime();
+        if (diff <= 0) {
+          setCountdown('¡Es hoy!');
+          clearInterval(interval);
+        } else {
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          setCountdown(`${days}d ${hours}h`);
+        }
+      };
+      updateCountdown();
+      interval = setInterval(updateCountdown, 60000);
+    }
+    return () => clearInterval(interval);
+  }, [eventDate]);
 
   const fetchData = async () => {
     try {
@@ -42,6 +77,7 @@ const EventDetailScreen = ({ route, navigation }: any) => {
   useEffect(() => {
     fetchData();
     fetchMyAssignment();
+    fetchEventDate();
   }, [eventId]);
 
   const handleShuffle = async () => {
@@ -148,6 +184,14 @@ const EventDetailScreen = ({ route, navigation }: any) => {
         </View>
       )}
 
+      {/* Countdown */}
+      {eventDate && (
+        <View style={styles.countdownCard}>
+          <Clock size={20} color={Theme.colors.cta} />
+          <Text style={styles.countdownText}>Faltan: {countdown}</Text>
+        </View>
+      )}
+
       {/* Código de invitación para organizador */}
       {isOrganizer && status !== 'shuffled' && inviteCode && (
         <View style={styles.inviteCard}>
@@ -166,6 +210,78 @@ const EventDetailScreen = ({ route, navigation }: any) => {
           <Text style={styles.waitingText}>Esperando a que el organizador realice el sorteo...</Text>
         </View>
       )}
+
+      {/* Botones de acción */}
+      <View style={styles.actionsContainer}>
+        {status !== 'shuffled' && (
+          <TouchableOpacity 
+            style={styles.actionBtn} 
+            onPress={() => navigation.navigate('Preferences', { eventId })}
+          >
+            <Heart size={20} color={Theme.colors.cta} />
+            <Text style={styles.actionText}>Mis preferencias</Text>
+          </TouchableOpacity>
+        )}
+        
+        {status === 'shuffled' && (
+          <>
+            <TouchableOpacity 
+              style={styles.actionBtn} 
+              onPress={() => navigation.navigate('Preferences', { eventId })}
+            >
+              <Heart size={20} color={Theme.colors.cta} />
+              <Text style={styles.actionText}>Preferencias de mi asignado</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionBtn} 
+              onPress={() => navigation.navigate('GiftProgress', { eventId })}
+            >
+              <Gift size={20} color={Theme.colors.cta} />
+              <Text style={styles.actionText}>Mi regalo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionBtn} 
+              onPress={() => navigation.navigate('Gallery', { eventId })}
+            >
+              <Image size={20} color={Theme.colors.cta} />
+              <Text style={styles.actionText}>Galería</Text>
+            </TouchableOpacity>
+          </>
+        )}
+        
+        {isOrganizer && status !== 'shuffled' && (
+          <TouchableOpacity 
+            style={styles.actionBtn} 
+            onPress={() => {
+              // Simple date picker simulation
+              Alert.alert(
+                'Fecha del intercambio',
+                'Ingresa la fecha (YYYY-MM-DD HH:MM)',
+                [
+                  { text: 'Cancelar', style: 'cancel' },
+                  { 
+                    text: 'Setear', 
+                    onPress: async () => {
+                      try {
+                        await apiClient.patch(`/events/${eventId}/date`, {
+                          event_date: '2026-12-25T18:00:00Z'
+                        });
+                        Alert.alert('Fecha seteada');
+                        fetchEventDate();
+                      } catch (e: any) {
+                        Alert.alert('Error', e.message);
+                      }
+                    }
+                  }
+                ]
+              );
+            }}
+          >
+            <Calendar size={20} color={Theme.colors.cta} />
+            <Text style={styles.actionText}>Setear fecha</Text>
+          </TouchableOpacity>
+        )}
+      </View>
 
       <ParticipantList
         participants={participants}
@@ -314,6 +430,45 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fonts.heading,
     fontSize: 14,
     color: Theme.colors.white,
+    marginLeft: Theme.spacing.sm,
+  },
+  countdownCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FEF3C7',
+    borderRadius: Theme.radius.md,
+    padding: Theme.spacing.md,
+    marginHorizontal: Theme.spacing.lg,
+    marginBottom: Theme.spacing.md,
+  },
+  countdownText: {
+    fontFamily: Theme.fonts.heading,
+    fontSize: 18,
+    color: '#92400E',
+    marginLeft: Theme.spacing.sm,
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: Theme.spacing.lg,
+    marginBottom: Theme.spacing.md,
+    gap: Theme.spacing.sm,
+  },
+  actionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Theme.colors.white,
+    borderRadius: Theme.radius.md,
+    padding: Theme.spacing.md,
+    borderWidth: 1,
+    borderColor: Theme.colors.cta,
+    minWidth: 140,
+  },
+  actionText: {
+    fontFamily: Theme.fonts.heading,
+    fontSize: 12,
+    color: Theme.colors.cta,
     marginLeft: Theme.spacing.sm,
   },
 });

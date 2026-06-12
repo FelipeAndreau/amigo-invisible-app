@@ -16,6 +16,10 @@ import EventDetailScreen from './src/features/event/EventDetailScreen';
 import JoinEventScreen from './src/features/event/JoinEventScreen';
 import ChatScreen from './src/features/chat/ChatScreen';
 import FriendsScreen from './src/features/friends/FriendsScreen';
+import PreferencesScreen from './src/features/event/PreferencesScreen';
+import GiftProgressScreen from './src/features/event/GiftProgressScreen';
+import GalleryScreen from './src/features/event/GalleryScreen';
+import HistoryScreen from './src/features/event/HistoryScreen';
 
 const Stack = createStackNavigator();
 
@@ -47,6 +51,10 @@ const RootNavigator = () => {
           <Stack.Screen name="JoinEvent" component={JoinEventScreen} />
           <Stack.Screen name="Chat" component={ChatScreen} />
           <Stack.Screen name="Friends" component={FriendsScreen} />
+          <Stack.Screen name="Preferences" component={PreferencesScreen} />
+          <Stack.Screen name="GiftProgress" component={GiftProgressScreen} />
+          <Stack.Screen name="Gallery" component={GalleryScreen} />
+          <Stack.Screen name="History" component={HistoryScreen} />
         </>
       )}
     </Stack.Navigator>

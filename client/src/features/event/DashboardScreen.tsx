@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, 
 import { Theme } from '../../shared/theme';
 import { apiClient } from '../../shared/utils/api';
 import { useAuth } from '../../shared/hooks/useAuth';
-import { LogOut, Plus, Users, Calendar, Trash2, Link2, MessageCircle } from 'lucide-react-native';
+import { LogOut, Plus, Users, Calendar, Trash2, Link2, History } from 'lucide-react-native';
 
 const DashboardScreen = ({ navigation }: any) => {
   const [events, setEvents] = useState<any[]>([]);
@@ -103,6 +103,9 @@ const DashboardScreen = ({ navigation }: any) => {
       <View style={styles.header}>
         <Text style={styles.title}>Mis Sorteos</Text>
         <View style={styles.headerActions}>
+          <TouchableOpacity onPress={() => navigation.navigate('History')} style={styles.headerBtn}>
+            <History size={24} color={Theme.colors.primary} />
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('JoinEvent')} style={styles.headerBtn}>
             <Link2 size={24} color={Theme.colors.primary} />
           </TouchableOpacity>
