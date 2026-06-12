@@ -93,4 +93,23 @@ export const apiClient = {
       throw e;
     }
   },
+  patch: async (endpoint: string, body: any) => {
+    const headers = await getHeaders();
+    console.log(`[API] PATCH ${BASE_URL}${endpoint}`, body);
+    try {
+      const response = await fetchWithTimeout(`${BASE_URL}${endpoint}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({ error: 'Error en la petición' }));
+        throw new Error(err.error || 'Error al procesar la solicitud');
+      }
+      return response.json();
+    } catch (e) {
+      console.error(`[API ERROR] PATCH ${endpoint}:`, e);
+      throw e;
+    }
+  },
 };
