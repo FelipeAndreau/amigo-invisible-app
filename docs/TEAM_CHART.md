@@ -2,8 +2,22 @@
 
 ## Miembros del Equipo
 
-1. **Felipe Andreau** - Lead Developer & Infrastructure
-2. **Melissa Braunstein** - Frontend Developer (Reveal & Persistence)
-3. **Santiago Dangelo** - Logic & State Architect
-4. **Pilar Wagner** - Frontend Developer (Event Management)
-5. **Pia Porzio** - UI/UX Designer & Frontend Engineer
+1. **Felipe Andreau**
+   - **Rol**: Lead Developer & Infrastructure
+   - **Responsabilidades**: Configuración de entorno, CI/CD, Estructura del Servidor Go, Integración Git.
+
+2. **Melissa Braunstein**
+   - **Rol**: Frontend Developer (Reveal & Persistence)
+   - **Responsabilidades**: Pantalla de revelación privada, Persistencia local (AsyncStorage), Feedback háptico.
+
+3. **Santiago Dangelo**
+   - **Rol**: Logic & State Architect
+   - **Responsabilidades**: Algoritmo de Sorteo (Shuffle), Hook de gestión de eventos (`useEvent`), Lógica de negocio.
+
+4. **Pilar Wagner**
+   - **Rol**: Frontend Developer (Event Management)
+   - **Responsabilidades**: Pantallas de inicio, Gestión de participantes, Validaciones de entrada.
+
+5. **Pia Porzio**
+   - **Rol**: UI/UX Designer & Frontend Engineer
+   - **Responsabilidades**: Sistema de diseño (Theme), Componentes compartidos, Tipografía y Estética visual.
