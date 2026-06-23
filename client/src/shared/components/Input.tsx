@@ -9,20 +9,24 @@ interface Props {
   onChangeText: (text: string) => void;
   error?: string;
   secureTextEntry?: boolean;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
 }
 
-export const Input = ({ label, placeholder, value, onChangeText, error, secureTextEntry }: Props) => (
+export const Input = ({ label, placeholder, value, onChangeText, error, secureTextEntry, autoCapitalize, keyboardType }: Props) => (
   <View style={styles.container}>
-    {label && <Text style={styles.label}>{label}</Text>}
+    {!!label && <Text style={styles.label}>{label}</Text>}
     <TextInput
-      style={[styles.input, error ? styles.inputError : null]}
+      style={[styles.input, !!error && styles.inputError]}
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
-      secureTextEntry={secureTextEntry}
+      secureTextEntry={!!secureTextEntry}
+      autoCapitalize={autoCapitalize}
+      keyboardType={keyboardType}
       placeholderTextColor={Theme.colors.gray}
     />
-    {error && <Text style={styles.errorText}>{error}</Text>}
+    {!!error && <Text style={styles.errorText}>{error}</Text>}
   </View>
 );
 
