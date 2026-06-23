@@ -1,0 +1,21 @@
+# Dockerfile - Entorno de Desarrollo Frontend (Expo)
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Instalar dependencias globales de expo y ngrok para túneles
+RUN npm install -g expo-cli @expo/ngrok
+
+COPY package*.json ./
+# Usamos legacy-peer-deps para evitar conflictos en el entorno de 2026
+RUN npm install --legacy-peer-deps
+
+COPY . .
+
+# Puertos de Metro y Expo
+EXPOSE 8081
+EXPOSE 19000
+EXPOSE 19001
+EXPOSE 19002
+
+CMD ["npx", "expo", "start", "--dev-client", "--tunnel"]

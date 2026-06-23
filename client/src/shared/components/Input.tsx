@@ -11,9 +11,10 @@ interface Props {
   secureTextEntry?: boolean;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
+  multiline?: boolean;
 }
 
-export const Input = ({ label, placeholder, value, onChangeText, error, secureTextEntry, autoCapitalize, keyboardType }: Props) => (
+export const Input = ({ label, placeholder, value, onChangeText, error, secureTextEntry, autoCapitalize, keyboardType, multiline }: Props) => (
   <View style={styles.container}>
     {!!label && <Text style={styles.label}>{label}</Text>}
     <TextInput
@@ -24,6 +25,7 @@ export const Input = ({ label, placeholder, value, onChangeText, error, secureTe
       secureTextEntry={!!secureTextEntry}
       autoCapitalize={autoCapitalize}
       keyboardType={keyboardType}
+      multiline={!!multiline}
       placeholderTextColor={Theme.colors.gray}
     />
     {!!error && <Text style={styles.errorText}>{error}</Text>}
