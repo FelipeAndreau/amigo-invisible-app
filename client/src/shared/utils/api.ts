@@ -3,7 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 // ⚠️ IMPORTANTE: Cambiar esta IP por la IP de tu PC en la red local
 // para que Expo Go en tu celular pueda conectarse al backend.
 // En producción, usar la URL de tu servidor (ej: https://api.tuapp.com)
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.100.251:8080/api/v1';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.100.4:8080/api/v1';
 const BASE_URL = API_URL;
 
 // Timeout para requests (5 segundos)
