@@ -1,0 +1,123 @@
+# Historial de Conversaciones IA - Entrega 3
+
+**Agente**: Claude / OpenCode (Kimi k2.7-code)
+**Sesión**: Finalización de Entrega 3
+**Fecha**: 2026-07-29
+**Repositorio**: Amigo Invisible (React Native + Go + PostgreSQL)
+
+## Instrucciones
+
+Este archivo contiene un resumen de las interacciones con IA durante el cierre de la Entrega 3.
+Para la entrega formal, puede complementarse con el export nativo de OpenCode si está disponible.
+
+---
+
+## Sesión 1: Levantamiento del entorno de desarrollo
+
+**Usuario**: "podrias agarrar y levantar todo para que yo corra el comando de expo y levante la app? quiero ver si funciona, o decime como lo levanto"
+
+**Acciones realizadas por IA**:
+- Verificación del estado de Docker (`docker ps -a`).
+- Lectura de `README.md`, `docker-compose.yml`, `client/package.json`, `client/App.tsx` y `client/src/shared/utils/api.ts`.
+- Levantamiento de `database` y `backend` con `docker compose up -d database backend`.
+- Verificación de health check: `curl http://localhost:8080/health` → `{"status":"up","version":"1.0.0"}`.
+- Ejecución de `npm install` en `client/`.
+
+**Respuesta dada**:
+- Backend y base de datos levantados correctamente.
+- Instrucciones para ejecutar `cd client && npm run start:lan` y escanear QR con Expo Go.
+- Nota sobre IP local (`192.168.100.96`) y alternativa `npm run start:tunnel`.
+
+---
+
+## Sesión 2: Consulta sobre mejoras de la Entrega 3
+
+**Usuario**: "cuales fueron las mejoras de la entega 3?"
+
+**Acciones realizadas por IA**:
+- Lectura de `CHANGELOG.md`, `docs/alcance_final.md` y `docs/plan-e3.md`.
+
+**Respuesta dada**:
+- Resumen de E3: módulo de Grupos / Círculos, chat real conectado a la API, pulido de UX/UI y documentación final.
+- Jerarquía final: Usuario → Grupo → Evento → Participantes / Mensajes / Galería / Regalo.
+
+---
+
+## Sesión 3: Consulta sobre contribuciones de cada integrante
+
+**Usuario**: "que hizo cada itnegrant" y "pero hablo en la entrega 3"
+
+**Acciones realizadas por IA**:
+- Análisis del historial de git (`git log --format`, `git shortlog`, `git branch -a`).
+- Comparación entre `entrega-2` y `entrega-3`.
+- Revisión de ramas `e3-felipe`, `e3-melissa`, `e3-pia`, `e3-pilar`, `e3-santi`.
+
+**Respuesta dada**:
+- Plan de E3 por integrante según `docs/plan-e3.md`.
+- Observación basada en git: el desarrollo técnico de E3 (grupos, chat, docs finales) quedó consolidado bajo autoría de Felipe Andreau.
+- Santi tenía asignado frontend de grupos/chat; Pilar la doc técnica; Melissa Figma y testing; Pía alcance, IA y video.
+
+---
+
+## Sesión 4: Lista de archivos por integrante
+
+**Usuario**: "dmae una lista de que archivod debe subir cada intgrante de todo eso que hicimos"
+
+**Acciones realizadas por IA**:
+- Lectura de `docs/TEAM_CHART.md`, `docs/tasks/e3-*.md`, `docs/reflexiones/*.md`, `docs/video_guion.md` y `ia/`.
+
+**Respuesta dada**:
+- Listado detallado de archivos por integrante (Felipe, Santi, Melissa, Pilar, Pía).
+- Identificación de faltantes: reflexiones sin completar, Figma, video, PDFs, `ia/entrega-3/`.
+
+---
+
+## Sesión 5: Verificación de entregables faltantes
+
+**Usuario**: "claro pero no esta hecho? que flata hacer de esta lsta..."
+
+**Acciones realizadas por IA**:
+- Verificación de existencia de PDFs, `usability_test.md`, video, `.cm` final, reflexiones.
+- Revisión de credenciales en `docker-compose.yml` y `TODO.md`.
+- Chequeo de branches `main`/`entrega-3`.
+
+**Respuesta dada**:
+- Tabla de estado de cada entregable con ✅ / ❌ / ⚠️.
+- Lista priorizada de 10 faltantes (PDFs, Figma, video, .cm, reflexiones, credenciales, etc.).
+
+---
+
+## Sesión 6: Creación de entregables faltantes
+
+**Usuario**: "agreg la lsita de skills, y test usabilidad los md valen como pdf tmb y agrega el .cm"
+
+**Acciones realizadas por IA**:
+- Creación de `ia/entrega-3/indice_skills.md` con skills de E3.
+- Creación de `ia/entrega-3/logs_ia_e3.cm` (este archivo).
+- Creación de `docs/usability_test.md` con plan, tareas, observaciones y conclusiones.
+- Respuesta sobre validez de `.md` vs `.pdf`.
+
+**Respuesta dada**:
+- Confirmación de que `.md` puede valer si la consigna no exige PDF, aunque PDF es más formal.
+- Entregables generados y ubicaciones.
+
+---
+
+## Skills utilizadas en esta sesión
+
+- `golang-patterns`
+- `api-design-principles`
+- `frontend-patterns`
+- `react-native-patterns`
+- `devops-tooling`
+- `git-analysis`
+- `project-management`
+- `ux-research`
+- `technical-writing`
+- `documentation-standards`
+
+---
+
+**Total de mensajes**: ~20-25 intercambios
+**Archivos inspeccionados**: 15+
+**Archivos creados**: `ia/entrega-3/indice_skills.md`, `ia/entrega-3/logs_ia_e3.cm`, `docs/usability_test.md`

@@ -1,0 +1,46 @@
+# Historial de Conversaciones IA - Entrega 2
+
+**Nota**: Este archivo debe ser reemplazado por el export real de conversaciones de Claude Code / OpenCode.
+
+## Instrucciones para Exportar
+
+1. En Claude Code, ejecutar: `/export` o buscar opción de exportar historial.
+2. Guardar el archivo como `logs_ia_e2.cm`.
+3. Reemplazar este archivo placeholder.
+
+## Resumen de Conversaciones (E2)
+
+### Sesión 1: Planificación y Análisis del Repo
+- Análisis del estado de `entrega-2` en el repo privado.
+- Identificación de faltantes: RNF, validaciones, sistema de invitaciones, RevealPublicScreen vacío.
+- Diseño de plan con 5 feature branches.
+
+### Sesión 2: Implementación Backend (Felipe)
+- Migración de JWT secret a variables de entorno.
+- Validación de fortaleza de contraseñas en Go.
+- Creación de `.env.example` para el servidor.
+
+### Sesión 3: Sistema de Invitaciones (Santiago)
+- Diseño de DB: `invite_code` en tabla `events`.
+- Implementación de `GenerateInviteHandler` y `JoinEventHandler`.
+- Actualización de rutas en `main.go`.
+
+### Sesión 4: Revelación Pública (Melissa)
+- Implementación completa de `RevealPublicScreen.tsx`.
+- Animaciones con `Animated` de React Native.
+- Manejo de estados: loading, error, link usado, resultado válido.
+
+### Sesión 5: UX Frontend (Pilar)
+- Creación de utilidades de validación (`validation.ts`).
+- Mejora de `api.ts` con timeouts y manejo de errores de red.
+- Actualización de `LoginScreen` con validaciones de cliente.
+- Creación de `.env.example` para el cliente.
+
+### Sesión 6: Design System y Documentación (Pia)
+- Agregado de RNF (Seguridad, Mantenibilidad, Escalabilidad) a `alcance_e2.md`.
+- Actualización de tabla de API en `doc_tecnica_e2.md`.
+- Creación de `indice_skills.md` para entrega 2.
+
+---
+**Total de mensajes**: ~150+ (aproximado)
+**Skills utilizadas**: golang-patterns, api-design-principles, security-review, frontend-patterns, git-workflow, coding-standards

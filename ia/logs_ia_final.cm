@@ -1,0 +1,189 @@
+# Historial de Conversaciones IA - Proyecto Completo (E1 + E2 + E3)
+
+**Agente**: Claude / OpenCode (Kimi k2.7-code)
+**Proyecto**: Amigo Invisible - Aplicación móvil para organizar sorteos de regalos
+**Stack**: React Native (Expo) + Go (Gin) + PostgreSQL
+**Repositorio**: PrivateAmigoInvisible
+**Fecha de consolidación**: 2026-07-29
+
+## Nota
+
+Este archivo es el `.cm` final consolidado del proyecto. Reúne las conversaciones de IA de las tres entregas (E1, E2, E3). Las entregas parciales se encuentran en:
+
+- `/ia/entrega-1/logs_ia_e1.cm`
+- `/ia/entrega-2/logs_ia_e2.cm`
+- `/ia/entrega-3/logs_ia_e3.cm`
+
+---
+
+## Entrega 1 - Fundamentos
+
+**Período**: 2026-05-18
+
+**Temas principales consultados**:
+- Arquitectura base del monorepo: `client/` (Expo) y `server/` (Go).
+- Algoritmo de sorteo de Amigo Invisible sin auto-regalo.
+- Pantalla inicial de creación de eventos y lista de participantes.
+- Dockerización del entorno completo.
+- Sistema de navegación básico con React Navigation.
+
+**Archivos generados** (representativos):
+- `client/App.tsx` inicial.
+- `server/cmd/api/main.go` con health check.
+- `docker-compose.yml` con servicios base.
+- `docs/alcance_e1.md`, `docs/diseno_ux_ui_e1.md`, `docs/doc_tecnica_e1.md`.
+
+**Skills utilizadas**:
+- `react-native-patterns`: Estructura inicial de pantallas Expo.
+- `golang-patterns`: Servidor base con Gin y health check.
+- `docker-tooling`: Docker Compose para desarrollo local.
+- `technical-writing`: Documentación de alcance E1.
+
+---
+
+## Entrega 2 - Escalado Funcional
+
+**Período**: 2026-05-19 a 2026-06-12
+
+**Temas principales consultados**:
+- Migración de JWT secret hardcodeado a variables de entorno.
+- Validación de fortaleza de contraseñas con bcrypt.
+- Sistema de invitaciones con códigos para eventos.
+- Dashboard dual: eventos como organizador y como participante.
+- Revelación privada con animaciones (`RevealPublicScreen`).
+- Preferencias de regalo, galería de fotos, historial de eventos.
+- Amigos / contactos personales.
+- RNF (Seguridad, Mantenibilidad, Escalabilidad) en `alcance_e2.md`.
+- Flujo de trabajo con 5 feature branches.
+
+**Archivos generados** (representativos):
+- `server/internal/auth/handler.go` (registro/login con JWT).
+- `server/internal/event/handler.go` (endpoints de eventos).
+- `client/src/features/event/DashboardScreen.tsx`.
+- `client/src/features/event/RevealPublicScreen.tsx`.
+- `client/src/features/event/PreferencesScreen.tsx`.
+- `client/src/features/event/GalleryScreen.tsx`.
+- `client/src/features/event/HistoryScreen.tsx`.
+- `client/src/features/friends/FriendsScreen.tsx`.
+- `docs/alcance_e2.md`, `docs/doc_tecnica_e2.md`, `docs/CHANGELOG.md`.
+- `ia/entrega-2/indice_skills.md`.
+- `ia/entrega-2/logs_ia_e2.cm`.
+
+**Skills utilizadas**:
+- `golang-patterns`: Handlers, middleware, validaciones en Go.
+- `api-design-principles`: Endpoints RESTful para invitaciones y roles.
+- `security-review`: JWT secrets, bcrypt, control de acceso.
+- `frontend-patterns`: Estados de carga/error, validaciones de formulario.
+- `react-native-patterns`: Animaciones, AsyncStorage, navegación.
+- `git-workflow`: Estrategia de feature branches.
+- `coding-standards`: Documentación de RNF y calidad de código.
+
+---
+
+## Entrega 3 - Producto Final
+
+**Período**: 2026-07-29
+
+**Temas principales consultados**:
+- Levantamiento del entorno de desarrollo con Docker y Expo.
+- Implementación del módulo de Grupos / Círculos.
+- Conexión del chat real a la API con polling.
+- Scripts `start:lan` y `start:tunnel` para Expo.
+- Revisión de qué mejoras correspondían a E3.
+- Análisis de contribuciones por integrante en `entrega-3`.
+- Lista de archivos que cada integrante debe entregar.
+- Identificación de entregables faltantes.
+- Creación de testing de usabilidad, lista de skills y `.cm` final.
+
+**Archivos generados / modificados** (representativos):
+- `server/internal/groups/handler.go`.
+- `server/internal/groups/logic.go`.
+- `server/internal/groups/models.go`.
+- `server/internal/platform/db/migrations/007_create_groups.sql`.
+- `server/internal/platform/db/migrations/008_create_group_members.sql`.
+- `server/internal/platform/db/migrations/009_add_group_id_to_events.sql`.
+- `client/src/features/groups/GroupsScreen.tsx`.
+- `client/src/features/groups/CreateGroupScreen.tsx`.
+- `client/src/features/groups/JoinGroupScreen.tsx`.
+- `client/src/features/groups/GroupDetailScreen.tsx`.
+- `client/src/features/chat/ChatScreen.tsx`.
+- `client/package.json` (scripts LAN/tunnel).
+- `client/src/shared/utils/api.ts` (fallback IP local).
+- `docs/alcance_final.md`.
+- `docs/doc_tecnica_final.md`.
+- `docs/plan-e3.md`.
+- `docs/CHANGELOG.md`.
+- `docs/TEAM_CHART.md`.
+- `docs/usability_test.md`.
+- `docs/video_guion.md`.
+- `docs/reflexiones/reflexion_*.md`.
+- `docs/tasks/e3-*_tasks.md`.
+- `ia/entrega-3/indice_skills.md`.
+- `ia/entrega-3/logs_ia_e3.cm`.
+- `ia/logs_ia_final.cm` (este archivo).
+
+**Skills utilizadas**:
+- `golang-patterns`: Handlers, middleware, validaciones y migraciones en Go.
+- `api-design-principles`: Endpoints RESTful para grupos, miembros, eventos vinculados y chat.
+- `frontend-patterns`: Estados de carga/error, polling, navegación.
+- `react-native-patterns`: Pantallas de grupos, chat, scroll, manejo de teclado.
+- `devops-tooling`: Docker Compose, Expo LAN/tunnel, red local.
+- `git-analysis`: Análisis de branches y commits.
+- `project-management`: Planificación de entregables, checklists.
+- `ux-research`: Testing de usabilidad.
+- `technical-writing`: Documentación final, skills, reflexiones.
+- `documentation-standards`: Formato `.cm`, índices y evidencia de IA.
+
+---
+
+## Skills Totales Utilizadas en el Proyecto
+
+1. `react-native-patterns`
+2. `golang-patterns`
+3. `api-design-principles`
+4. `security-review`
+5. `frontend-patterns`
+6. `docker-tooling`
+7. `devops-tooling`
+8. `git-workflow`
+9. `git-analysis`
+10. `coding-standards`
+11. `project-management`
+12. `ux-research`
+13. `technical-writing`
+14. `documentation-standards`
+15. `motion-patterns` (animaciones en E2)
+
+---
+
+## Conversaciones Destacadas de la Sesión Final (E3)
+
+### 1. Levantamiento del entorno
+- Se levantó backend y base de datos con `docker compose up -d database backend`.
+- Se verificó health check en `http://localhost:8080/health`.
+- Se instaló `node_modules` en `client/`.
+- Se instruyó al usuario usar `cd client && npm run start:lan` para Expo.
+
+### 2. Mejoras de E3
+- Se identificaron: Grupos / Círculos, chat real, pulido UX/UI, documentación final.
+
+### 3. Contribuciones por integrante
+- Se analizó el historial de git de `entrega-3`.
+- Se concluyó que el desarrollo técnico de E3 quedó consolidado bajo autoría de Felipe Andreau.
+- Se documentó la asignación planeada vs. la ejecución real.
+
+### 4. Entregables faltantes
+- Se identificaron: PDFs, Figma final, video demo, `.cm` final, reflexiones completadas, `usability_test.md`.
+- Se detectaron credenciales hardcodeadas en `docker-compose.yml`.
+
+### 5. Generación de entregables faltantes
+- Se creó `ia/entrega-3/indice_skills.md`.
+- Se creó `ia/entrega-3/logs_ia_e3.cm`.
+- Se creó `docs/usability_test.md`.
+- Se creó `ia/logs_ia_final.cm`.
+
+---
+
+**Total aproximado de intercambios con IA**: 60-80 mensajes (E1 + E2 + E3)
+**Archivos inspeccionados**: 30+
+**Archivos creados durante la sesión final**: 4
