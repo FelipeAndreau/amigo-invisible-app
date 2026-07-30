@@ -50,7 +50,7 @@ const LoginScreen = () => {
     try {
       const endpoint = isRegister ? '/auth/register' : '/auth/login';
       const data = await apiClient.post(endpoint, { email, password });
-      await login(data.token);
+      await login(data.token, String(data.user_id || ''));
     } catch (e: any) {
       Alert.alert('Error', e.message || 'Error de conexión');
     } finally {
