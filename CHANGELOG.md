@@ -1,5 +1,22 @@
 # Changelog
 
+## [E3] - 2026-07-18
+### Added
+- Sistema de grupos y círculos.
+- API para gestión de grupos.
+- Chat en tiempo real.
+- Integración de eventos con grupos.
+- Documentación técnica final.
+
+### Changed
+- Mejoras en autenticación.
+- Optimización de infraestructura Docker.
+- Actualización del README y documentación.
+
+### Fixed
+- Correcciones en eventos asociados a grupos.
+- Correcciones de migraciones y mensajes del chat.
+
 ## [E2] - 2026-06-12
 ### Added
 - **Flujo de Autenticación:** Login y registro con JWT + Bcrypt.

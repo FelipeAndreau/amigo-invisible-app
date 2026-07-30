@@ -1,5 +1,23 @@
 # Changelog - Amigo Invisible
 
+## [1.0.0] - 2026-07-18
+### Entrega 3: Producto Final Escalado (Grupos + Pulido Profesional)
+
+### Añadido
+- **Expansión Vertical: Grupos / Círculos**: nueva entidad jerárquica que agrupa usuarios y permite múltiples eventos dentro de un mismo grupo.
+- **API de Grupos**: endpoints para crear, listar, unirse por código, gestionar miembros y ver eventos del grupo.
+- **Eventos en Grupos**: al crear un sorteo se puede opcionalmente vincular a un grupo; el creador debe ser miembro.
+- **Chat Real**: reemplazo del placeholder/mock por mensajes reales vía API REST con polling cada 3 segundos.
+- **Autenticación Mejorada**: el frontend ahora persiste `user_id` junto al token para personalizar la experiencia.
+- **Navegación de Grupos**: pantallas `GroupsScreen`, `CreateGroupScreen`, `JoinGroupScreen` y `GroupDetailScreen`.
+- **Infraestructura Docker**: corrección de versiones (`Go 1.25.0`, `Air v1.61.7`) para builds estables.
+- **Migraciones de Base de Datos**: tablas `groups`, `group_members` y columna `events.group_id`.
+
+### Corregido
+- Inserción de eventos con `group_id` asignaba `name` y `status` de forma invertida.
+- `schema.sql` base no modificaba tablas existentes; las nuevas entidades se aplican exclusivamente por migraciones.
+- Inconsistencia entre backend (`is_mine`) y frontend (`user_id`) para distinguir mensajes propios.
+
 ## [0.2.0] - 2026-06-11
 ### Entrega 2: Escalado Funcional (Online + Multi-Evento)
 
