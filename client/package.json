@@ -4,6 +4,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "start:lan": "HOST=$(ip route get 1.1.1.1 | grep -oP 'src \\K\\S+') && REACT_NATIVE_PACKAGER_HOSTNAME=$HOST EXPO_PUBLIC_API_URL=http://$HOST:8080/api/v1 expo start --lan --clear",
+    "start:tunnel": "expo start --tunnel --clear",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
