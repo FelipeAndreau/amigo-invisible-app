@@ -17,6 +17,19 @@ func CreateEventHandler(c *gin.Context) {
 		return
 	}
 
+	// If a group is provided, verify the user is a member of that group.
+	if req.GroupID != nil && *req.GroupID != "" {
+		var memberCount int
+		err := db.DB.QueryRow(
+			"SELECT COUNT(*) FROM group_members WHERE group_id = $1 AND user_id = $2",
+			*req.GroupID, userID,
+		).Scan(&memberCount)
+		if err != nil || memberCount == 0 {
+			c.JSON(http.StatusForbidden, gin.H{"error": "You are not a member of this group"})
+			return
+		}
+	}
+
 	inviteCode := GenerateMagicToken()[:8]
 
 	tx, err := db.DB.Begin()
@@ -26,7 +39,17 @@ func CreateEventHandler(c *gin.Context) {
 	}
 
 	var eventID string
-	err = tx.QueryRow("INSERT INTO events (user_id, name, status, invite_code) VALUES ($1, $2, 'open', $3) RETURNING id", userID, req.Name, inviteCode).Scan(&eventID)
+	if req.GroupID != nil && *req.GroupID != "" {
+		err = tx.QueryRow(
+			"INSERT INTO events (user_id, group_id, name, status, invite_code) VALUES ($1, $2, $3, 'open', $4) RETURNING id",
+			userID, *req.GroupID, req.Name, inviteCode,
+		).Scan(&eventID)
+	} else {
+		err = tx.QueryRow(
+			"INSERT INTO events (user_id, name, status, invite_code) VALUES ($1, $2, 'open', $3) RETURNING id",
+			userID, req.Name, inviteCode,
+		).Scan(&eventID)
+	}
 	if err != nil {
 		tx.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create event"})

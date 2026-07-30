@@ -4,6 +4,7 @@ import (
 	"amigo-invisible-server/internal/auth"
 	"amigo-invisible-server/internal/event"
 	"amigo-invisible-server/internal/friends"
+	"amigo-invisible-server/internal/groups"
 	"amigo-invisible-server/internal/messages"
 	"amigo-invisible-server/internal/platform/db"
 	"github.com/gin-gonic/gin"
@@ -76,9 +77,17 @@ func main() {
 			protected.GET("/friends", friends.ListFriendsHandler)
 			protected.POST("/friends", friends.AddFriendHandler)
 			protected.DELETE("/friends/:id", friends.DeleteFriendHandler)
-			protected.GET("/events/:id/messages", messages.ListMessagesHandler)
-			protected.POST("/events/:id/messages", messages.CreateMessageHandler)
-		}
+		protected.GET("/events/:id/messages", messages.ListMessagesHandler)
+		protected.POST("/events/:id/messages", messages.CreateMessageHandler)
+
+		protected.POST("/groups", groups.CreateGroupHandler)
+		protected.GET("/groups", groups.ListGroupsHandler)
+		protected.GET("/groups/:id", groups.GetGroupHandler)
+		protected.POST("/groups/join", groups.JoinGroupHandler)
+		protected.GET("/groups/:id/members", groups.ListGroupMembersHandler)
+		protected.DELETE("/groups/:id/members/:user_id", groups.DeleteGroupMemberHandler)
+		protected.GET("/groups/:id/events", groups.ListGroupEventsHandler)
+	}
 	}
 
 	r.Run("0.0.0.0:8080")
